@@ -1,0 +1,17 @@
+{
+  "compilerOptions": {
+    "target": "esnext",
+    "rootDir": "./src",
+    "outDir": "./dist",
+    "lib": ["DOM", "DOM.Iterable", "esnext"],
+    "types": ["node", "magicmirror-module"],
+    "allowJs": true,
+    "jsx": "react-jsx",
+    "moduleResolution": "bundler",
+    "strict": true,
+    "esModuleInterop": true,
+    "skipLibCheck": true,
+    "forceConsistentCasingInFileNames": true
+  },
+  "include": ["./src/**/*.ts"]
+}
