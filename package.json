@@ -12,7 +12,13 @@
   "license": "ISC",
   "dependencies": {
     "react": "^19.2.5",
-    "react-dom": "^19.2.5"
+    "react-dom": "^19.2.5",
+    "@mantine/hooks": "^9.1.0",
+    "@mantine/core": "^9.1.0",
+    "@mantine/dates": "^9.1.0",
+    "@mantine/schedule": "^9.1.0",
+    "dayjs": "^1.11.20",
+    "zustand": "^5.0.12"
   },
   "devDependencies": {
     "@babel/preset-react": "^7.28.5",
@@ -29,7 +35,9 @@
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
     "html-webpack-plugin": "^5.6.7",
+    "radash": "^12.1.1",
     "rollup": "^4.60.2",
+    "rollup-plugin-import-css": "^4.2.1",
     "ts-loader": "^9.5.7",
     "typescript": "^6.0.3"
   }

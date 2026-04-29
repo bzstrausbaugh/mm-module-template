@@ -4,11 +4,13 @@ import resolve from '@rollup/plugin-node-resolve';
 import typescript from '@rollup/plugin-typescript';
 import babel from '@rollup/plugin-babel';
 import replace from '@rollup/plugin-replace';
+import css from 'rollup-plugin-import-css';
 import path from 'path';
 import { fileURLToPath } from 'node:url';
 
-const moduleName = path.dirname(fileURLToPath(import.meta.url));
-
+const moduleNameSplit = path.dirname(fileURLToPath(import.meta.url)).split('/');
+const moduleName = moduleNameSplit[moduleNameSplit.length - 1];
+console.log('ModuleName', moduleName);
 export default [
   {
     input: './src/index.ts',
@@ -20,6 +22,7 @@ export default [
         'process.env.MODULE_NAME': moduleName,
         preventAssignment: true,
       }),
+      css({ output: `${moduleName}.css` }),
       babel({
         babelHelpers: 'bundled',
         presets: ['@babel/preset-react'],
