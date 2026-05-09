@@ -17,7 +17,6 @@ Module.register('MMM-MonthlyCalendar2', {
       this.renderedReact = true;
       const root = createRoot(rootDiv);
       root.render(React.createElement(CalendarWrapper));
-      console.log('Getting setter');
     }
 
     return rootDiv;

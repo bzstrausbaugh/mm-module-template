@@ -16285,7 +16285,6 @@
 	            this.renderedReact = true;
 	            const root = clientExports.createRoot(rootDiv);
 	            root.render(React.createElement(CalendarWrapper));
-	            console.log('Getting setter');
 	        }
 	        return rootDiv;
 	    },
