@@ -56,10 +56,6 @@
                 if (!Array.isArray(payload)) {
                     return;
                 }
-                console.log('Payload To Transform');
-                for (let i = 0; i < 10; i++) {
-                    console.dir(payload[i], { depth: null });
-                }
                 const transformed = payload.map((event, index) => {
                     const mappedEvent = {
                         id: `evt-${index}`,

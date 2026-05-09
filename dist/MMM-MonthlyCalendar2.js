@@ -1241,20 +1241,9 @@
 	function getFontSize(size) {
 		return getSize(size, "mantine-font-size");
 	}
-	function getLineHeight(size) {
-		return getSize(size, "mantine-line-height", false);
-	}
 	function getShadow(size) {
 		if (!size) return;
 		return getSize(size, "mantine-shadow", false);
-	}
-
-	//#region packages/@mantine/core/src/core/utils/create-event-handler/create-event-handler.ts
-	function createEventHandler(parentEventHandler, eventHandler) {
-		return (event) => {
-			parentEventHandler?.(event);
-			eventHandler?.(event);
-		};
 	}
 
 	//#region packages/@mantine/hooks/src/utils/random-id/random-id.ts
@@ -3911,12 +3900,12 @@
 	}
 
 	//#region packages/@mantine/core/src/components/ScrollArea/ScrollAreaRoot/ScrollAreaRoot.tsx
-	const defaultProps$t = {
+	const defaultProps$n = {
 		scrollHideDelay: 1e3,
 		type: "hover"
 	};
 	function ScrollAreaRoot(_props) {
-		const { type, scrollHideDelay, scrollbars, getStyles, ref, ...others } = useProps("ScrollAreaRoot", defaultProps$t, _props);
+		const { type, scrollHideDelay, scrollbars, getStyles, ref, ...others } = useProps("ScrollAreaRoot", defaultProps$n, _props);
 		const [scrollArea, setScrollArea] = reactExports.useState(null);
 		const [viewport, setViewport] = reactExports.useState(null);
 		const [content, setContent] = reactExports.useState(null);
@@ -4816,94 +4805,6 @@
 	  };
 	}
 
-	const FOCUSABLE_ATTRIBUTE$1 = 'data-floating-ui-focusable';
-	function contains$1(parent, child) {
-	  if (!parent || !child) {
-	    return false;
-	  }
-	  const rootNode = child.getRootNode == null ? void 0 : child.getRootNode();
-
-	  // First, attempt with faster native method
-	  if (parent.contains(child)) {
-	    return true;
-	  }
-
-	  // then fallback to custom implementation with Shadow DOM support
-	  if (rootNode && isShadowRoot(rootNode)) {
-	    let next = child;
-	    while (next) {
-	      if (parent === next) {
-	        return true;
-	      }
-	      // @ts-ignore
-	      next = next.parentNode || next.host;
-	    }
-	  }
-
-	  // Give up, the result is false
-	  return false;
-	}
-	function getTarget(event) {
-	  if ('composedPath' in event) {
-	    return event.composedPath()[0];
-	  }
-
-	  // TS thinks `event` is of type never as it assumes all browsers support
-	  // `composedPath()`, but browsers without shadow DOM don't.
-	  return event.target;
-	}
-	function isEventTargetWithin(event, node) {
-	  if (node == null) {
-	    return false;
-	  }
-	  if ('composedPath' in event) {
-	    return event.composedPath().includes(node);
-	  }
-
-	  // TS thinks `event` is of type never as it assumes all browsers support composedPath, but browsers without shadow dom don't
-	  const e = event;
-	  return e.target != null && node.contains(e.target);
-	}
-	function isRootElement(element) {
-	  return element.matches('html,body');
-	}
-	function getDocument(node) {
-	  return (node == null ? void 0 : node.ownerDocument) || document;
-	}
-	function getFloatingFocusElement(floatingElement) {
-	  if (!floatingElement) {
-	    return null;
-	  }
-	  // Try to find the element that has `{...getFloatingProps()}` spread on it.
-	  // This indicates the floating element is acting as a positioning wrapper, and
-	  // so focus should be managed on the child element with the event handlers and
-	  // aria props.
-	  return floatingElement.hasAttribute(FOCUSABLE_ATTRIBUTE$1) ? floatingElement : floatingElement.querySelector("[" + FOCUSABLE_ATTRIBUTE$1 + "]") || floatingElement;
-	}
-
-	function getNodeChildren(nodes, id, onlyOpenChildren) {
-	  if (onlyOpenChildren === void 0) {
-	    onlyOpenChildren = true;
-	  }
-	  const directChildren = nodes.filter(node => {
-	    var _node$context;
-	    return node.parentId === id && (!onlyOpenChildren || ((_node$context = node.context) == null ? void 0 : _node$context.open));
-	  });
-	  return directChildren.flatMap(child => [child, ...getNodeChildren(nodes, child.id, onlyOpenChildren)]);
-	}
-	function isReactEvent(event) {
-	  return 'nativeEvent' in event;
-	}
-	function isMouseLikePointerType(pointerType, strict) {
-	  // On some Linux machines with Chromium, mouse inputs return a `pointerType`
-	  // of "pen": https://github.com/floating-ui/floating-ui/issues/2015
-	  const values = ['mouse', 'pen'];
-	  {
-	    values.push('', undefined);
-	  }
-	  return values.includes(pointerType);
-	}
-
 	var isClient$1 = typeof document !== 'undefined';
 
 	var noop$1 = function noop() {};
@@ -4913,14 +4814,6 @@
 	const SafeReact$1 = {
 	  ...React$1
 	};
-
-	function useLatestRef$1(value) {
-	  const ref = reactExports.useRef(value);
-	  index$1(() => {
-	    ref.current = value;
-	  });
-	  return ref;
-	}
 	const useInsertionEffect = SafeReact$1.useInsertionEffect;
 	const useSafeInsertionEffect = useInsertionEffect || (fn => fn());
 	function useEffectEvent(callback) {
@@ -7074,10 +6967,6 @@
 	  }, refs);
 	}
 
-	const FOCUSABLE_ATTRIBUTE = 'data-floating-ui-focusable';
-	const ACTIVE_KEY = 'active';
-	const SELECTED_KEY = 'selected';
-
 	// https://github.com/mui/material-ui/issues/41190#issuecomment-2040873379
 	const SafeReact = {
 	  ...React$1
@@ -7147,809 +7036,6 @@
 	 * Returns the nearest floating tree context, if available.
 	 */
 	const useFloatingTree = () => reactExports.useContext(FloatingTreeContext);
-
-	function createAttribute(name) {
-	  return "data-floating-ui-" + name;
-	}
-
-	function clearTimeoutIfSet(timeoutRef) {
-	  if (timeoutRef.current !== -1) {
-	    clearTimeout(timeoutRef.current);
-	    timeoutRef.current = -1;
-	  }
-	}
-
-	const safePolygonIdentifier = /*#__PURE__*/createAttribute('safe-polygon');
-	function getDelay(value, prop, pointerType) {
-	  if (pointerType && !isMouseLikePointerType(pointerType)) {
-	    return 0;
-	  }
-	  if (typeof value === 'number') {
-	    return value;
-	  }
-	  if (typeof value === 'function') {
-	    const result = value();
-	    if (typeof result === 'number') {
-	      return result;
-	    }
-	    return result == null ? void 0 : result[prop];
-	  }
-	  return value == null ? void 0 : value[prop];
-	}
-	function getRestMs(value) {
-	  if (typeof value === 'function') {
-	    return value();
-	  }
-	  return value;
-	}
-	/**
-	 * Opens the floating element while hovering over the reference element, like
-	 * CSS `:hover`.
-	 * @see https://floating-ui.com/docs/useHover
-	 */
-	function useHover(context, props) {
-	  if (props === void 0) {
-	    props = {};
-	  }
-	  const {
-	    open,
-	    onOpenChange,
-	    dataRef,
-	    events,
-	    elements
-	  } = context;
-	  const {
-	    enabled = true,
-	    delay = 0,
-	    handleClose = null,
-	    mouseOnly = false,
-	    restMs = 0,
-	    move = true
-	  } = props;
-	  const tree = useFloatingTree();
-	  const parentId = useFloatingParentNodeId();
-	  const handleCloseRef = useLatestRef$1(handleClose);
-	  const delayRef = useLatestRef$1(delay);
-	  const openRef = useLatestRef$1(open);
-	  const restMsRef = useLatestRef$1(restMs);
-	  const pointerTypeRef = reactExports.useRef();
-	  const timeoutRef = reactExports.useRef(-1);
-	  const handlerRef = reactExports.useRef();
-	  const restTimeoutRef = reactExports.useRef(-1);
-	  const blockMouseMoveRef = reactExports.useRef(true);
-	  const performedPointerEventsMutationRef = reactExports.useRef(false);
-	  const unbindMouseMoveRef = reactExports.useRef(() => {});
-	  const restTimeoutPendingRef = reactExports.useRef(false);
-	  const isHoverOpen = useEffectEvent(() => {
-	    var _dataRef$current$open;
-	    const type = (_dataRef$current$open = dataRef.current.openEvent) == null ? void 0 : _dataRef$current$open.type;
-	    return (type == null ? void 0 : type.includes('mouse')) && type !== 'mousedown';
-	  });
-
-	  // When closing before opening, clear the delay timeouts to cancel it
-	  // from showing.
-	  reactExports.useEffect(() => {
-	    if (!enabled) return;
-	    function onOpenChange(_ref) {
-	      let {
-	        open
-	      } = _ref;
-	      if (!open) {
-	        clearTimeoutIfSet(timeoutRef);
-	        clearTimeoutIfSet(restTimeoutRef);
-	        blockMouseMoveRef.current = true;
-	        restTimeoutPendingRef.current = false;
-	      }
-	    }
-	    events.on('openchange', onOpenChange);
-	    return () => {
-	      events.off('openchange', onOpenChange);
-	    };
-	  }, [enabled, events]);
-	  reactExports.useEffect(() => {
-	    if (!enabled) return;
-	    if (!handleCloseRef.current) return;
-	    if (!open) return;
-	    function onLeave(event) {
-	      if (isHoverOpen()) {
-	        onOpenChange(false, event, 'hover');
-	      }
-	    }
-	    const html = getDocument(elements.floating).documentElement;
-	    html.addEventListener('mouseleave', onLeave);
-	    return () => {
-	      html.removeEventListener('mouseleave', onLeave);
-	    };
-	  }, [elements.floating, open, onOpenChange, enabled, handleCloseRef, isHoverOpen]);
-	  const closeWithDelay = reactExports.useCallback(function (event, runElseBranch, reason) {
-	    if (runElseBranch === void 0) {
-	      runElseBranch = true;
-	    }
-	    if (reason === void 0) {
-	      reason = 'hover';
-	    }
-	    const closeDelay = getDelay(delayRef.current, 'close', pointerTypeRef.current);
-	    if (closeDelay && !handlerRef.current) {
-	      clearTimeoutIfSet(timeoutRef);
-	      timeoutRef.current = window.setTimeout(() => onOpenChange(false, event, reason), closeDelay);
-	    } else if (runElseBranch) {
-	      clearTimeoutIfSet(timeoutRef);
-	      onOpenChange(false, event, reason);
-	    }
-	  }, [delayRef, onOpenChange]);
-	  const cleanupMouseMoveHandler = useEffectEvent(() => {
-	    unbindMouseMoveRef.current();
-	    handlerRef.current = undefined;
-	  });
-	  const clearPointerEvents = useEffectEvent(() => {
-	    if (performedPointerEventsMutationRef.current) {
-	      const body = getDocument(elements.floating).body;
-	      body.style.pointerEvents = '';
-	      body.removeAttribute(safePolygonIdentifier);
-	      performedPointerEventsMutationRef.current = false;
-	    }
-	  });
-	  const isClickLikeOpenEvent = useEffectEvent(() => {
-	    return dataRef.current.openEvent ? ['click', 'mousedown'].includes(dataRef.current.openEvent.type) : false;
-	  });
-
-	  // Registering the mouse events on the reference directly to bypass React's
-	  // delegation system. If the cursor was on a disabled element and then entered
-	  // the reference (no gap), `mouseenter` doesn't fire in the delegation system.
-	  reactExports.useEffect(() => {
-	    if (!enabled) return;
-	    function onReferenceMouseEnter(event) {
-	      clearTimeoutIfSet(timeoutRef);
-	      blockMouseMoveRef.current = false;
-	      if (mouseOnly && !isMouseLikePointerType(pointerTypeRef.current) || getRestMs(restMsRef.current) > 0 && !getDelay(delayRef.current, 'open')) {
-	        return;
-	      }
-	      const openDelay = getDelay(delayRef.current, 'open', pointerTypeRef.current);
-	      if (openDelay) {
-	        timeoutRef.current = window.setTimeout(() => {
-	          if (!openRef.current) {
-	            onOpenChange(true, event, 'hover');
-	          }
-	        }, openDelay);
-	      } else if (!open) {
-	        onOpenChange(true, event, 'hover');
-	      }
-	    }
-	    function onReferenceMouseLeave(event) {
-	      if (isClickLikeOpenEvent()) {
-	        clearPointerEvents();
-	        return;
-	      }
-	      unbindMouseMoveRef.current();
-	      const doc = getDocument(elements.floating);
-	      clearTimeoutIfSet(restTimeoutRef);
-	      restTimeoutPendingRef.current = false;
-	      if (handleCloseRef.current && dataRef.current.floatingContext) {
-	        // Prevent clearing `onScrollMouseLeave` timeout.
-	        if (!open) {
-	          clearTimeoutIfSet(timeoutRef);
-	        }
-	        handlerRef.current = handleCloseRef.current({
-	          ...dataRef.current.floatingContext,
-	          tree,
-	          x: event.clientX,
-	          y: event.clientY,
-	          onClose() {
-	            clearPointerEvents();
-	            cleanupMouseMoveHandler();
-	            if (!isClickLikeOpenEvent()) {
-	              closeWithDelay(event, true, 'safe-polygon');
-	            }
-	          }
-	        });
-	        const handler = handlerRef.current;
-	        doc.addEventListener('mousemove', handler);
-	        unbindMouseMoveRef.current = () => {
-	          doc.removeEventListener('mousemove', handler);
-	        };
-	        return;
-	      }
-
-	      // Allow interactivity without `safePolygon` on touch devices. With a
-	      // pointer, a short close delay is an alternative, so it should work
-	      // consistently.
-	      const shouldClose = pointerTypeRef.current === 'touch' ? !contains$1(elements.floating, event.relatedTarget) : true;
-	      if (shouldClose) {
-	        closeWithDelay(event);
-	      }
-	    }
-
-	    // Ensure the floating element closes after scrolling even if the pointer
-	    // did not move.
-	    // https://github.com/floating-ui/floating-ui/discussions/1692
-	    function onScrollMouseLeave(event) {
-	      if (isClickLikeOpenEvent()) return;
-	      if (!dataRef.current.floatingContext) return;
-	      handleCloseRef.current == null || handleCloseRef.current({
-	        ...dataRef.current.floatingContext,
-	        tree,
-	        x: event.clientX,
-	        y: event.clientY,
-	        onClose() {
-	          clearPointerEvents();
-	          cleanupMouseMoveHandler();
-	          if (!isClickLikeOpenEvent()) {
-	            closeWithDelay(event);
-	          }
-	        }
-	      })(event);
-	    }
-	    function onFloatingMouseEnter() {
-	      clearTimeoutIfSet(timeoutRef);
-	    }
-	    function onFloatingMouseLeave(event) {
-	      if (!isClickLikeOpenEvent()) {
-	        closeWithDelay(event, false);
-	      }
-	    }
-	    if (isElement(elements.domReference)) {
-	      const reference = elements.domReference;
-	      const floating = elements.floating;
-	      if (open) {
-	        reference.addEventListener('mouseleave', onScrollMouseLeave);
-	      }
-	      if (move) {
-	        reference.addEventListener('mousemove', onReferenceMouseEnter, {
-	          once: true
-	        });
-	      }
-	      reference.addEventListener('mouseenter', onReferenceMouseEnter);
-	      reference.addEventListener('mouseleave', onReferenceMouseLeave);
-	      if (floating) {
-	        floating.addEventListener('mouseleave', onScrollMouseLeave);
-	        floating.addEventListener('mouseenter', onFloatingMouseEnter);
-	        floating.addEventListener('mouseleave', onFloatingMouseLeave);
-	      }
-	      return () => {
-	        if (open) {
-	          reference.removeEventListener('mouseleave', onScrollMouseLeave);
-	        }
-	        if (move) {
-	          reference.removeEventListener('mousemove', onReferenceMouseEnter);
-	        }
-	        reference.removeEventListener('mouseenter', onReferenceMouseEnter);
-	        reference.removeEventListener('mouseleave', onReferenceMouseLeave);
-	        if (floating) {
-	          floating.removeEventListener('mouseleave', onScrollMouseLeave);
-	          floating.removeEventListener('mouseenter', onFloatingMouseEnter);
-	          floating.removeEventListener('mouseleave', onFloatingMouseLeave);
-	        }
-	      };
-	    }
-	  }, [elements, enabled, context, mouseOnly, move, closeWithDelay, cleanupMouseMoveHandler, clearPointerEvents, onOpenChange, open, openRef, tree, delayRef, handleCloseRef, dataRef, isClickLikeOpenEvent, restMsRef]);
-
-	  // Block pointer-events of every element other than the reference and floating
-	  // while the floating element is open and has a `handleClose` handler. Also
-	  // handles nested floating elements.
-	  // https://github.com/floating-ui/floating-ui/issues/1722
-	  index$1(() => {
-	    var _handleCloseRef$curre;
-	    if (!enabled) return;
-	    if (open && (_handleCloseRef$curre = handleCloseRef.current) != null && (_handleCloseRef$curre = _handleCloseRef$curre.__options) != null && _handleCloseRef$curre.blockPointerEvents && isHoverOpen()) {
-	      performedPointerEventsMutationRef.current = true;
-	      const floatingEl = elements.floating;
-	      if (isElement(elements.domReference) && floatingEl) {
-	        var _tree$nodesRef$curren;
-	        const body = getDocument(elements.floating).body;
-	        body.setAttribute(safePolygonIdentifier, '');
-	        const ref = elements.domReference;
-	        const parentFloating = tree == null || (_tree$nodesRef$curren = tree.nodesRef.current.find(node => node.id === parentId)) == null || (_tree$nodesRef$curren = _tree$nodesRef$curren.context) == null ? void 0 : _tree$nodesRef$curren.elements.floating;
-	        if (parentFloating) {
-	          parentFloating.style.pointerEvents = '';
-	        }
-	        body.style.pointerEvents = 'none';
-	        ref.style.pointerEvents = 'auto';
-	        floatingEl.style.pointerEvents = 'auto';
-	        return () => {
-	          body.style.pointerEvents = '';
-	          ref.style.pointerEvents = '';
-	          floatingEl.style.pointerEvents = '';
-	        };
-	      }
-	    }
-	  }, [enabled, open, parentId, elements, tree, handleCloseRef, isHoverOpen]);
-	  index$1(() => {
-	    if (!open) {
-	      pointerTypeRef.current = undefined;
-	      restTimeoutPendingRef.current = false;
-	      cleanupMouseMoveHandler();
-	      clearPointerEvents();
-	    }
-	  }, [open, cleanupMouseMoveHandler, clearPointerEvents]);
-	  reactExports.useEffect(() => {
-	    return () => {
-	      cleanupMouseMoveHandler();
-	      clearTimeoutIfSet(timeoutRef);
-	      clearTimeoutIfSet(restTimeoutRef);
-	      clearPointerEvents();
-	    };
-	  }, [enabled, elements.domReference, cleanupMouseMoveHandler, clearPointerEvents]);
-	  const reference = reactExports.useMemo(() => {
-	    function setPointerRef(event) {
-	      pointerTypeRef.current = event.pointerType;
-	    }
-	    return {
-	      onPointerDown: setPointerRef,
-	      onPointerEnter: setPointerRef,
-	      onMouseMove(event) {
-	        const {
-	          nativeEvent
-	        } = event;
-	        function handleMouseMove() {
-	          if (!blockMouseMoveRef.current && !openRef.current) {
-	            onOpenChange(true, nativeEvent, 'hover');
-	          }
-	        }
-	        if (mouseOnly && !isMouseLikePointerType(pointerTypeRef.current)) {
-	          return;
-	        }
-	        if (open || getRestMs(restMsRef.current) === 0) {
-	          return;
-	        }
-
-	        // Ignore insignificant movements to account for tremors.
-	        if (restTimeoutPendingRef.current && event.movementX ** 2 + event.movementY ** 2 < 2) {
-	          return;
-	        }
-	        clearTimeoutIfSet(restTimeoutRef);
-	        if (pointerTypeRef.current === 'touch') {
-	          handleMouseMove();
-	        } else {
-	          restTimeoutPendingRef.current = true;
-	          restTimeoutRef.current = window.setTimeout(handleMouseMove, getRestMs(restMsRef.current));
-	        }
-	      }
-	    };
-	  }, [mouseOnly, onOpenChange, open, openRef, restMsRef]);
-	  return reactExports.useMemo(() => enabled ? {
-	    reference
-	  } : {}, [enabled, reference]);
-	}
-
-	const NOOP = () => {};
-	const FloatingDelayGroupContext = /*#__PURE__*/reactExports.createContext({
-	  delay: 0,
-	  initialDelay: 0,
-	  timeoutMs: 0,
-	  currentId: null,
-	  setCurrentId: NOOP,
-	  setState: NOOP,
-	  isInstantPhase: false
-	});
-
-	/**
-	 * @deprecated
-	 * Use the return value of `useDelayGroup()` instead.
-	 */
-	const useDelayGroupContext = () => reactExports.useContext(FloatingDelayGroupContext);
-	/**
-	 * Provides context for a group of floating elements that should share a
-	 * `delay`.
-	 * @see https://floating-ui.com/docs/FloatingDelayGroup
-	 */
-	function FloatingDelayGroup(props) {
-	  const {
-	    children,
-	    delay,
-	    timeoutMs = 0
-	  } = props;
-	  const [state, setState] = reactExports.useReducer((prev, next) => ({
-	    ...prev,
-	    ...next
-	  }), {
-	    delay,
-	    timeoutMs,
-	    initialDelay: delay,
-	    currentId: null,
-	    isInstantPhase: false
-	  });
-	  const initialCurrentIdRef = reactExports.useRef(null);
-	  const setCurrentId = reactExports.useCallback(currentId => {
-	    setState({
-	      currentId
-	    });
-	  }, []);
-	  index$1(() => {
-	    if (state.currentId) {
-	      if (initialCurrentIdRef.current === null) {
-	        initialCurrentIdRef.current = state.currentId;
-	      } else if (!state.isInstantPhase) {
-	        setState({
-	          isInstantPhase: true
-	        });
-	      }
-	    } else {
-	      if (state.isInstantPhase) {
-	        setState({
-	          isInstantPhase: false
-	        });
-	      }
-	      initialCurrentIdRef.current = null;
-	    }
-	  }, [state.currentId, state.isInstantPhase]);
-	  return /*#__PURE__*/jsxRuntimeExports.jsx(FloatingDelayGroupContext.Provider, {
-	    value: reactExports.useMemo(() => ({
-	      ...state,
-	      setState,
-	      setCurrentId
-	    }), [state, setCurrentId]),
-	    children: children
-	  });
-	}
-	/**
-	 * Enables grouping when called inside a component that's a child of a
-	 * `FloatingDelayGroup`.
-	 * @see https://floating-ui.com/docs/FloatingDelayGroup
-	 */
-	function useDelayGroup(context, options) {
-	  if (options === void 0) {
-	    options = {};
-	  }
-	  const {
-	    open,
-	    onOpenChange,
-	    floatingId
-	  } = context;
-	  const {
-	    id: optionId,
-	    enabled = true
-	  } = options;
-	  const id = optionId != null ? optionId : floatingId;
-	  const groupContext = useDelayGroupContext();
-	  const {
-	    currentId,
-	    setCurrentId,
-	    initialDelay,
-	    setState,
-	    timeoutMs
-	  } = groupContext;
-	  index$1(() => {
-	    if (!enabled) return;
-	    if (!currentId) return;
-	    setState({
-	      delay: {
-	        open: 1,
-	        close: getDelay(initialDelay, 'close')
-	      }
-	    });
-	    if (currentId !== id) {
-	      onOpenChange(false);
-	    }
-	  }, [enabled, id, onOpenChange, setState, currentId, initialDelay]);
-	  index$1(() => {
-	    function unset() {
-	      onOpenChange(false);
-	      setState({
-	        delay: initialDelay,
-	        currentId: null
-	      });
-	    }
-	    if (!enabled) return;
-	    if (!currentId) return;
-	    if (!open && currentId === id) {
-	      if (timeoutMs) {
-	        const timeout = window.setTimeout(unset, timeoutMs);
-	        return () => {
-	          clearTimeout(timeout);
-	        };
-	      }
-	      unset();
-	    }
-	  }, [enabled, open, setState, currentId, id, onOpenChange, initialDelay, timeoutMs]);
-	  index$1(() => {
-	    if (!enabled) return;
-	    if (setCurrentId === NOOP || !open) return;
-	    setCurrentId(id);
-	  }, [enabled, open, setCurrentId, id]);
-	  return groupContext;
-	}
-
-	const bubbleHandlerKeys = {
-	  pointerdown: 'onPointerDown',
-	  mousedown: 'onMouseDown',
-	  click: 'onClick'
-	};
-	const captureHandlerKeys = {
-	  pointerdown: 'onPointerDownCapture',
-	  mousedown: 'onMouseDownCapture',
-	  click: 'onClickCapture'
-	};
-	const normalizeProp = normalizable => {
-	  var _normalizable$escapeK, _normalizable$outside;
-	  return {
-	    escapeKey: typeof normalizable === 'boolean' ? normalizable : (_normalizable$escapeK = normalizable == null ? void 0 : normalizable.escapeKey) != null ? _normalizable$escapeK : false,
-	    outsidePress: typeof normalizable === 'boolean' ? normalizable : (_normalizable$outside = normalizable == null ? void 0 : normalizable.outsidePress) != null ? _normalizable$outside : true
-	  };
-	};
-	/**
-	 * Closes the floating element when a dismissal is requested — by default, when
-	 * the user presses the `escape` key or outside of the floating element.
-	 * @see https://floating-ui.com/docs/useDismiss
-	 */
-	function useDismiss(context, props) {
-	  if (props === void 0) {
-	    props = {};
-	  }
-	  const {
-	    open,
-	    onOpenChange,
-	    elements,
-	    dataRef
-	  } = context;
-	  const {
-	    enabled = true,
-	    escapeKey = true,
-	    outsidePress: unstable_outsidePress = true,
-	    outsidePressEvent = 'pointerdown',
-	    referencePress = false,
-	    referencePressEvent = 'pointerdown',
-	    ancestorScroll = false,
-	    bubbles,
-	    capture
-	  } = props;
-	  const tree = useFloatingTree();
-	  const outsidePressFn = useEffectEvent(typeof unstable_outsidePress === 'function' ? unstable_outsidePress : () => false);
-	  const outsidePress = typeof unstable_outsidePress === 'function' ? outsidePressFn : unstable_outsidePress;
-	  const endedOrStartedInsideRef = reactExports.useRef(false);
-	  const {
-	    escapeKey: escapeKeyBubbles,
-	    outsidePress: outsidePressBubbles
-	  } = normalizeProp(bubbles);
-	  const {
-	    escapeKey: escapeKeyCapture,
-	    outsidePress: outsidePressCapture
-	  } = normalizeProp(capture);
-	  const isComposingRef = reactExports.useRef(false);
-	  const closeOnEscapeKeyDown = useEffectEvent(event => {
-	    var _dataRef$current$floa;
-	    if (!open || !enabled || !escapeKey || event.key !== 'Escape') {
-	      return;
-	    }
-
-	    // Wait until IME is settled. Pressing `Escape` while composing should
-	    // close the compose menu, but not the floating element.
-	    if (isComposingRef.current) {
-	      return;
-	    }
-	    const nodeId = (_dataRef$current$floa = dataRef.current.floatingContext) == null ? void 0 : _dataRef$current$floa.nodeId;
-	    const children = tree ? getNodeChildren(tree.nodesRef.current, nodeId) : [];
-	    if (!escapeKeyBubbles) {
-	      event.stopPropagation();
-	      if (children.length > 0) {
-	        let shouldDismiss = true;
-	        children.forEach(child => {
-	          var _child$context;
-	          if ((_child$context = child.context) != null && _child$context.open && !child.context.dataRef.current.__escapeKeyBubbles) {
-	            shouldDismiss = false;
-	            return;
-	          }
-	        });
-	        if (!shouldDismiss) {
-	          return;
-	        }
-	      }
-	    }
-	    onOpenChange(false, isReactEvent(event) ? event.nativeEvent : event, 'escape-key');
-	  });
-	  const closeOnEscapeKeyDownCapture = useEffectEvent(event => {
-	    var _getTarget2;
-	    const callback = () => {
-	      var _getTarget;
-	      closeOnEscapeKeyDown(event);
-	      (_getTarget = getTarget(event)) == null || _getTarget.removeEventListener('keydown', callback);
-	    };
-	    (_getTarget2 = getTarget(event)) == null || _getTarget2.addEventListener('keydown', callback);
-	  });
-	  const closeOnPressOutside = useEffectEvent(event => {
-	    var _dataRef$current$floa2;
-	    // Given developers can stop the propagation of the synthetic event,
-	    // we can only be confident with a positive value.
-	    const insideReactTree = dataRef.current.insideReactTree;
-	    dataRef.current.insideReactTree = false;
-
-	    // When click outside is lazy (`click` event), handle dragging.
-	    // Don't close if:
-	    // - The click started inside the floating element.
-	    // - The click ended inside the floating element.
-	    const endedOrStartedInside = endedOrStartedInsideRef.current;
-	    endedOrStartedInsideRef.current = false;
-	    if (outsidePressEvent === 'click' && endedOrStartedInside) {
-	      return;
-	    }
-	    if (insideReactTree) {
-	      return;
-	    }
-	    if (typeof outsidePress === 'function' && !outsidePress(event)) {
-	      return;
-	    }
-	    const target = getTarget(event);
-	    const inertSelector = "[" + createAttribute('inert') + "]";
-	    const markers = getDocument(elements.floating).querySelectorAll(inertSelector);
-	    let targetRootAncestor = isElement(target) ? target : null;
-	    while (targetRootAncestor && !isLastTraversableNode(targetRootAncestor)) {
-	      const nextParent = getParentNode(targetRootAncestor);
-	      if (isLastTraversableNode(nextParent) || !isElement(nextParent)) {
-	        break;
-	      }
-	      targetRootAncestor = nextParent;
-	    }
-
-	    // Check if the click occurred on a third-party element injected after the
-	    // floating element rendered.
-	    if (markers.length && isElement(target) && !isRootElement(target) &&
-	    // Clicked on a direct ancestor (e.g. FloatingOverlay).
-	    !contains$1(target, elements.floating) &&
-	    // If the target root element contains none of the markers, then the
-	    // element was injected after the floating element rendered.
-	    Array.from(markers).every(marker => !contains$1(targetRootAncestor, marker))) {
-	      return;
-	    }
-
-	    // Check if the click occurred on the scrollbar
-	    if (isHTMLElement(target) && floating) {
-	      const lastTraversableNode = isLastTraversableNode(target);
-	      const style = getComputedStyle$1(target);
-	      const scrollRe = /auto|scroll/;
-	      const isScrollableX = lastTraversableNode || scrollRe.test(style.overflowX);
-	      const isScrollableY = lastTraversableNode || scrollRe.test(style.overflowY);
-	      const canScrollX = isScrollableX && target.clientWidth > 0 && target.scrollWidth > target.clientWidth;
-	      const canScrollY = isScrollableY && target.clientHeight > 0 && target.scrollHeight > target.clientHeight;
-	      const isRTL = style.direction === 'rtl';
-
-	      // Check click position relative to scrollbar.
-	      // In some browsers it is possible to change the <body> (or window)
-	      // scrollbar to the left side, but is very rare and is difficult to
-	      // check for. Plus, for modal dialogs with backdrops, it is more
-	      // important that the backdrop is checked but not so much the window.
-	      const pressedVerticalScrollbar = canScrollY && (isRTL ? event.offsetX <= target.offsetWidth - target.clientWidth : event.offsetX > target.clientWidth);
-	      const pressedHorizontalScrollbar = canScrollX && event.offsetY > target.clientHeight;
-	      if (pressedVerticalScrollbar || pressedHorizontalScrollbar) {
-	        return;
-	      }
-	    }
-	    const nodeId = (_dataRef$current$floa2 = dataRef.current.floatingContext) == null ? void 0 : _dataRef$current$floa2.nodeId;
-	    const targetIsInsideChildren = tree && getNodeChildren(tree.nodesRef.current, nodeId).some(node => {
-	      var _node$context;
-	      return isEventTargetWithin(event, (_node$context = node.context) == null ? void 0 : _node$context.elements.floating);
-	    });
-	    if (isEventTargetWithin(event, elements.floating) || isEventTargetWithin(event, elements.domReference) || targetIsInsideChildren) {
-	      return;
-	    }
-	    const children = tree ? getNodeChildren(tree.nodesRef.current, nodeId) : [];
-	    if (children.length > 0) {
-	      let shouldDismiss = true;
-	      children.forEach(child => {
-	        var _child$context2;
-	        if ((_child$context2 = child.context) != null && _child$context2.open && !child.context.dataRef.current.__outsidePressBubbles) {
-	          shouldDismiss = false;
-	          return;
-	        }
-	      });
-	      if (!shouldDismiss) {
-	        return;
-	      }
-	    }
-	    onOpenChange(false, event, 'outside-press');
-	  });
-	  const closeOnPressOutsideCapture = useEffectEvent(event => {
-	    var _getTarget4;
-	    const callback = () => {
-	      var _getTarget3;
-	      closeOnPressOutside(event);
-	      (_getTarget3 = getTarget(event)) == null || _getTarget3.removeEventListener(outsidePressEvent, callback);
-	    };
-	    (_getTarget4 = getTarget(event)) == null || _getTarget4.addEventListener(outsidePressEvent, callback);
-	  });
-	  reactExports.useEffect(() => {
-	    if (!open || !enabled) {
-	      return;
-	    }
-	    dataRef.current.__escapeKeyBubbles = escapeKeyBubbles;
-	    dataRef.current.__outsidePressBubbles = outsidePressBubbles;
-	    let compositionTimeout = -1;
-	    function onScroll(event) {
-	      onOpenChange(false, event, 'ancestor-scroll');
-	    }
-	    function handleCompositionStart() {
-	      window.clearTimeout(compositionTimeout);
-	      isComposingRef.current = true;
-	    }
-	    function handleCompositionEnd() {
-	      // Safari fires `compositionend` before `keydown`, so we need to wait
-	      // until the next tick to set `isComposing` to `false`.
-	      // https://bugs.webkit.org/show_bug.cgi?id=165004
-	      compositionTimeout = window.setTimeout(() => {
-	        isComposingRef.current = false;
-	      },
-	      // 0ms or 1ms don't work in Safari. 5ms appears to consistently work.
-	      // Only apply to WebKit for the test to remain 0ms.
-	      isWebKit() ? 5 : 0);
-	    }
-	    const doc = getDocument(elements.floating);
-	    if (escapeKey) {
-	      doc.addEventListener('keydown', escapeKeyCapture ? closeOnEscapeKeyDownCapture : closeOnEscapeKeyDown, escapeKeyCapture);
-	      doc.addEventListener('compositionstart', handleCompositionStart);
-	      doc.addEventListener('compositionend', handleCompositionEnd);
-	    }
-	    outsidePress && doc.addEventListener(outsidePressEvent, outsidePressCapture ? closeOnPressOutsideCapture : closeOnPressOutside, outsidePressCapture);
-	    let ancestors = [];
-	    if (ancestorScroll) {
-	      if (isElement(elements.domReference)) {
-	        ancestors = getOverflowAncestors(elements.domReference);
-	      }
-	      if (isElement(elements.floating)) {
-	        ancestors = ancestors.concat(getOverflowAncestors(elements.floating));
-	      }
-	      if (!isElement(elements.reference) && elements.reference && elements.reference.contextElement) {
-	        ancestors = ancestors.concat(getOverflowAncestors(elements.reference.contextElement));
-	      }
-	    }
-
-	    // Ignore the visual viewport for scrolling dismissal (allow pinch-zoom)
-	    ancestors = ancestors.filter(ancestor => {
-	      var _doc$defaultView;
-	      return ancestor !== ((_doc$defaultView = doc.defaultView) == null ? void 0 : _doc$defaultView.visualViewport);
-	    });
-	    ancestors.forEach(ancestor => {
-	      ancestor.addEventListener('scroll', onScroll, {
-	        passive: true
-	      });
-	    });
-	    return () => {
-	      if (escapeKey) {
-	        doc.removeEventListener('keydown', escapeKeyCapture ? closeOnEscapeKeyDownCapture : closeOnEscapeKeyDown, escapeKeyCapture);
-	        doc.removeEventListener('compositionstart', handleCompositionStart);
-	        doc.removeEventListener('compositionend', handleCompositionEnd);
-	      }
-	      outsidePress && doc.removeEventListener(outsidePressEvent, outsidePressCapture ? closeOnPressOutsideCapture : closeOnPressOutside, outsidePressCapture);
-	      ancestors.forEach(ancestor => {
-	        ancestor.removeEventListener('scroll', onScroll);
-	      });
-	      window.clearTimeout(compositionTimeout);
-	    };
-	  }, [dataRef, elements, escapeKey, outsidePress, outsidePressEvent, open, onOpenChange, ancestorScroll, enabled, escapeKeyBubbles, outsidePressBubbles, closeOnEscapeKeyDown, escapeKeyCapture, closeOnEscapeKeyDownCapture, closeOnPressOutside, outsidePressCapture, closeOnPressOutsideCapture]);
-	  reactExports.useEffect(() => {
-	    dataRef.current.insideReactTree = false;
-	  }, [dataRef, outsidePress, outsidePressEvent]);
-	  const reference = reactExports.useMemo(() => ({
-	    onKeyDown: closeOnEscapeKeyDown,
-	    ...(referencePress && {
-	      [bubbleHandlerKeys[referencePressEvent]]: event => {
-	        onOpenChange(false, event.nativeEvent, 'reference-press');
-	      },
-	      ...(referencePressEvent !== 'click' && {
-	        onClick(event) {
-	          onOpenChange(false, event.nativeEvent, 'reference-press');
-	        }
-	      })
-	    })
-	  }), [closeOnEscapeKeyDown, onOpenChange, referencePress, referencePressEvent]);
-	  const floating = reactExports.useMemo(() => {
-	    function setMouseDownOrUpInside(event) {
-	      if (event.button !== 0) {
-	        return;
-	      }
-	      endedOrStartedInsideRef.current = true;
-	    }
-	    return {
-	      onKeyDown: closeOnEscapeKeyDown,
-	      onMouseDown: setMouseDownOrUpInside,
-	      onMouseUp: setMouseDownOrUpInside,
-	      [captureHandlerKeys[outsidePressEvent]]: () => {
-	        dataRef.current.insideReactTree = true;
-	      }
-	    };
-	  }, [closeOnEscapeKeyDown, outsidePressEvent, dataRef]);
-	  return reactExports.useMemo(() => enabled ? {
-	    reference,
-	    floating
-	  } : {}, [enabled, reference, floating]);
-	}
 
 	function useFloatingRootContext(options) {
 	  const {
@@ -8091,204 +7177,13 @@
 	  }), [position, refs, elements, context]);
 	}
 
-	function mergeProps(userProps, propsList, elementKey) {
-	  const map = new Map();
-	  const isItem = elementKey === 'item';
-	  let domUserProps = userProps;
-	  if (isItem && userProps) {
-	    const {
-	      [ACTIVE_KEY]: _,
-	      [SELECTED_KEY]: __,
-	      ...validProps
-	    } = userProps;
-	    domUserProps = validProps;
-	  }
-	  return {
-	    ...(elementKey === 'floating' && {
-	      tabIndex: -1,
-	      [FOCUSABLE_ATTRIBUTE]: ''
-	    }),
-	    ...domUserProps,
-	    ...propsList.map(value => {
-	      const propsOrGetProps = value ? value[elementKey] : null;
-	      if (typeof propsOrGetProps === 'function') {
-	        return userProps ? propsOrGetProps(userProps) : null;
-	      }
-	      return propsOrGetProps;
-	    }).concat(userProps).reduce((acc, props) => {
-	      if (!props) {
-	        return acc;
-	      }
-	      Object.entries(props).forEach(_ref => {
-	        let [key, value] = _ref;
-	        if (isItem && [ACTIVE_KEY, SELECTED_KEY].includes(key)) {
-	          return;
-	        }
-	        if (key.indexOf('on') === 0) {
-	          if (!map.has(key)) {
-	            map.set(key, []);
-	          }
-	          if (typeof value === 'function') {
-	            var _map$get;
-	            (_map$get = map.get(key)) == null || _map$get.push(value);
-	            acc[key] = function () {
-	              var _map$get2;
-	              for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
-	                args[_key] = arguments[_key];
-	              }
-	              return (_map$get2 = map.get(key)) == null ? void 0 : _map$get2.map(fn => fn(...args)).find(val => val !== undefined);
-	            };
-	          }
-	        } else {
-	          acc[key] = value;
-	        }
-	      });
-	      return acc;
-	    }, {})
-	  };
-	}
-	/**
-	 * Merges an array of interaction hooks' props into prop getters, allowing
-	 * event handler functions to be composed together without overwriting one
-	 * another.
-	 * @see https://floating-ui.com/docs/useInteractions
-	 */
-	function useInteractions(propsList) {
-	  if (propsList === void 0) {
-	    propsList = [];
-	  }
-	  const referenceDeps = propsList.map(key => key == null ? void 0 : key.reference);
-	  const floatingDeps = propsList.map(key => key == null ? void 0 : key.floating);
-	  const itemDeps = propsList.map(key => key == null ? void 0 : key.item);
-	  const getReferenceProps = reactExports.useCallback(userProps => mergeProps(userProps, propsList, 'reference'),
-	  // eslint-disable-next-line react-hooks/exhaustive-deps
-	  referenceDeps);
-	  const getFloatingProps = reactExports.useCallback(userProps => mergeProps(userProps, propsList, 'floating'),
-	  // eslint-disable-next-line react-hooks/exhaustive-deps
-	  floatingDeps);
-	  const getItemProps = reactExports.useCallback(userProps => mergeProps(userProps, propsList, 'item'),
-	  // eslint-disable-next-line react-hooks/exhaustive-deps
-	  itemDeps);
-	  return reactExports.useMemo(() => ({
-	    getReferenceProps,
-	    getFloatingProps,
-	    getItemProps
-	  }), [getReferenceProps, getFloatingProps, getItemProps]);
-	}
-
-	const componentRoleToAriaRoleMap = /*#__PURE__*/new Map([['select', 'listbox'], ['combobox', 'listbox'], ['label', false]]);
-
-	/**
-	 * Adds base screen reader props to the reference and floating elements for a
-	 * given floating element `role`.
-	 * @see https://floating-ui.com/docs/useRole
-	 */
-	function useRole(context, props) {
-	  var _elements$domReferenc, _componentRoleToAriaR;
-	  if (props === void 0) {
-	    props = {};
-	  }
-	  const {
-	    open,
-	    elements,
-	    floatingId: defaultFloatingId
-	  } = context;
-	  const {
-	    enabled = true,
-	    role = 'dialog'
-	  } = props;
-	  const defaultReferenceId = useId();
-	  const referenceId = ((_elements$domReferenc = elements.domReference) == null ? void 0 : _elements$domReferenc.id) || defaultReferenceId;
-	  const floatingId = reactExports.useMemo(() => {
-	    var _getFloatingFocusElem;
-	    return ((_getFloatingFocusElem = getFloatingFocusElement(elements.floating)) == null ? void 0 : _getFloatingFocusElem.id) || defaultFloatingId;
-	  }, [elements.floating, defaultFloatingId]);
-	  const ariaRole = (_componentRoleToAriaR = componentRoleToAriaRoleMap.get(role)) != null ? _componentRoleToAriaR : role;
-	  const parentId = useFloatingParentNodeId();
-	  const isNested = parentId != null;
-	  const reference = reactExports.useMemo(() => {
-	    if (ariaRole === 'tooltip' || role === 'label') {
-	      return {
-	        ["aria-" + (role === 'label' ? 'labelledby' : 'describedby')]: open ? floatingId : undefined
-	      };
-	    }
-	    return {
-	      'aria-expanded': open ? 'true' : 'false',
-	      'aria-haspopup': ariaRole === 'alertdialog' ? 'dialog' : ariaRole,
-	      'aria-controls': open ? floatingId : undefined,
-	      ...(ariaRole === 'listbox' && {
-	        role: 'combobox'
-	      }),
-	      ...(ariaRole === 'menu' && {
-	        id: referenceId
-	      }),
-	      ...(ariaRole === 'menu' && isNested && {
-	        role: 'menuitem'
-	      }),
-	      ...(role === 'select' && {
-	        'aria-autocomplete': 'none'
-	      }),
-	      ...(role === 'combobox' && {
-	        'aria-autocomplete': 'list'
-	      })
-	    };
-	  }, [ariaRole, floatingId, isNested, open, referenceId, role]);
-	  const floating = reactExports.useMemo(() => {
-	    const floatingProps = {
-	      id: floatingId,
-	      ...(ariaRole && {
-	        role: ariaRole
-	      })
-	    };
-	    if (ariaRole === 'tooltip' || role === 'label') {
-	      return floatingProps;
-	    }
-	    return {
-	      ...floatingProps,
-	      ...(ariaRole === 'menu' && {
-	        'aria-labelledby': referenceId
-	      })
-	    };
-	  }, [ariaRole, floatingId, referenceId, role]);
-	  const item = reactExports.useCallback(_ref => {
-	    let {
-	      active,
-	      selected
-	    } = _ref;
-	    const commonProps = {
-	      role: 'option',
-	      ...(active && {
-	        id: floatingId + "-fui-option"
-	      })
-	    };
-
-	    // For `menu`, we are unable to tell if the item is a `menuitemradio`
-	    // or `menuitemcheckbox`. For backwards-compatibility reasons, also
-	    // avoid defaulting to `menuitem` as it may overwrite custom role props.
-	    switch (role) {
-	      case 'select':
-	      case 'combobox':
-	        return {
-	          ...commonProps,
-	          'aria-selected': selected
-	        };
-	    }
-	    return {};
-	  }, [floatingId, role]);
-	  return reactExports.useMemo(() => enabled ? {
-	    reference,
-	    floating,
-	    item
-	  } : {}, [enabled, reference, floating, item]);
-	}
-
 	//#region packages/@mantine/core/src/components/ScrollArea/ScrollArea.tsx
-	const defaultProps$s = {
+	const defaultProps$m = {
 		scrollHideDelay: 1e3,
 		type: "hover",
 		scrollbars: "xy"
 	};
-	const varsResolver$l = createVarsResolver((_, { scrollbarSize, overscrollBehavior, scrollbars }) => {
+	const varsResolver$h = createVarsResolver((_, { scrollbarSize, overscrollBehavior, scrollbars }) => {
 		let overrideOverscrollBehavior = overscrollBehavior;
 		if (overscrollBehavior && scrollbars) {
 			if (scrollbars === "x") overrideOverscrollBehavior = `${overscrollBehavior} auto`;
@@ -8300,7 +7195,7 @@
 		} };
 	});
 	const ScrollArea = factory((_props) => {
-		const props = useProps("ScrollArea", defaultProps$s, _props);
+		const props = useProps("ScrollArea", defaultProps$m, _props);
 		const { classNames, className, style, styles, unstyled, scrollbarSize, vars, type, scrollHideDelay, viewportProps, viewportRef, onScrollPositionChange, children, offsetScrollbars, scrollbars, onBottomReached, onTopReached, onLeftReached, onRightReached, overscrollBehavior, startScrollPosition, attributes, ...others } = props;
 		const [scrollbarHovered, setScrollbarHovered] = reactExports.useState(false);
 		const [verticalThumbVisible, setVerticalThumbVisible] = reactExports.useState(false);
@@ -8320,7 +7215,7 @@
 			unstyled,
 			attributes,
 			vars,
-			varsResolver: varsResolver$l
+			varsResolver: varsResolver$h
 		});
 		const localViewportRef = reactExports.useRef(null);
 		const combinedViewportRef = useMergeRefs$1([viewportRef, localViewportRef]);
@@ -8403,7 +7298,7 @@
 	});
 	ScrollArea.displayName = "@mantine/core/ScrollArea";
 	const ScrollAreaAutosize = factory((props) => {
-		const { children, classNames, styles, scrollbarSize, scrollHideDelay, type, dir, offsetScrollbars, overscrollBehavior, viewportRef, onScrollPositionChange, unstyled, variant, viewportProps, scrollbars, style, vars, onBottomReached, onTopReached, startScrollPosition, onOverflowChange, ...others } = useProps("ScrollAreaAutosize", defaultProps$s, props);
+		const { children, classNames, styles, scrollbarSize, scrollHideDelay, type, dir, offsetScrollbars, overscrollBehavior, viewportRef, onScrollPositionChange, unstyled, variant, viewportProps, scrollbars, style, vars, onBottomReached, onTopReached, startScrollPosition, onOverflowChange, ...others } = useProps("ScrollAreaAutosize", defaultProps$m, props);
 		const viewportObserverRef = reactExports.useRef(null);
 		const combinedViewportRef = useMergeRefs$1([viewportRef, viewportObserverRef]);
 		const overflowingRef = reactExports.useRef(false);
@@ -8472,7 +7367,7 @@
 		});
 	});
 	ScrollArea.classes = ScrollArea_module_default;
-	ScrollArea.varsResolver = varsResolver$l;
+	ScrollArea.varsResolver = varsResolver$h;
 	ScrollAreaAutosize.displayName = "@mantine/core/ScrollAreaAutosize";
 	ScrollAreaAutosize.classes = ScrollArea_module_default;
 	ScrollArea.Autosize = ScrollAreaAutosize;
@@ -8481,9 +7376,9 @@
 	var UnstyledButton_module_default = { "root": "m_87cf2631" };
 
 	//#region packages/@mantine/core/src/components/UnstyledButton/UnstyledButton.tsx
-	const defaultProps$r = { __staticSelector: "UnstyledButton" };
+	const defaultProps$l = { __staticSelector: "UnstyledButton" };
 	const UnstyledButton = polymorphicFactory((_props) => {
-		const props = useProps("UnstyledButton", defaultProps$r, _props);
+		const props = useProps("UnstyledButton", defaultProps$l, _props);
 		const { className, component = "button", __staticSelector, unstyled, classNames, styles, style, attributes, ...others } = props;
 		return /* @__PURE__ */ jsxRuntimeExports.jsx(Box, {
 			...useStyles({
@@ -8535,7 +7430,7 @@
 	var Paper_module_default = { "root": "m_1b7284a3" };
 
 	//#region packages/@mantine/core/src/components/Paper/Paper.tsx
-	const varsResolver$k = createVarsResolver((_, { radius, shadow }) => ({ root: {
+	const varsResolver$g = createVarsResolver((_, { radius, shadow }) => ({ root: {
 		"--paper-radius": radius === void 0 ? void 0 : getRadius(radius),
 		"--paper-shadow": getShadow(shadow)
 	} }));
@@ -8553,7 +7448,7 @@
 			unstyled,
 			attributes,
 			vars,
-			varsResolver: varsResolver$k
+			varsResolver: varsResolver$g
 		});
 		return /* @__PURE__ */ jsxRuntimeExports.jsx(Box, {
 			mod: [{ "data-with-border": withBorder }, mod],
@@ -8563,7 +7458,7 @@
 		});
 	});
 	Paper.classes = Paper_module_default;
-	Paper.varsResolver = varsResolver$k;
+	Paper.varsResolver = varsResolver$g;
 	Paper.displayName = "@mantine/core/Paper";
 
 	//#region packages/@mantine/core/src/utils/Floating/FloatingArrow/get-arrow-position-styles.ts
@@ -8667,15 +7562,15 @@
 	var Overlay_module_default = { "root": "m_9814e45f" };
 
 	//#region packages/@mantine/core/src/components/Overlay/Overlay.tsx
-	const defaultProps$q = { zIndex: getDefaultZIndex("modal") };
-	const varsResolver$j = createVarsResolver((_, { gradient, color, backgroundOpacity, blur, radius, zIndex }) => ({ root: {
+	const defaultProps$k = { zIndex: getDefaultZIndex("modal") };
+	const varsResolver$f = createVarsResolver((_, { gradient, color, backgroundOpacity, blur, radius, zIndex }) => ({ root: {
 		"--overlay-bg": gradient || (color !== void 0 || backgroundOpacity !== void 0) && rgba(color || "#000", backgroundOpacity ?? .6) || void 0,
 		"--overlay-filter": blur ? `blur(${rem(blur)})` : void 0,
 		"--overlay-radius": radius === void 0 ? void 0 : getRadius(radius),
 		"--overlay-z-index": zIndex?.toString()
 	} }));
 	const Overlay = polymorphicFactory((_props) => {
-		const props = useProps("Overlay", defaultProps$q, _props);
+		const props = useProps("Overlay", defaultProps$k, _props);
 		const { classNames, className, style, styles, unstyled, vars, fixed, center, children, radius, zIndex, gradient, blur, color, backgroundOpacity, mod, attributes, ...others } = props;
 		return /* @__PURE__ */ jsxRuntimeExports.jsx(Box, {
 			...useStyles({
@@ -8689,7 +7584,7 @@
 				unstyled,
 				attributes,
 				vars,
-				varsResolver: varsResolver$j
+				varsResolver: varsResolver$f
 			})("root"),
 			mod: [{
 				center,
@@ -8700,7 +7595,7 @@
 		});
 	});
 	Overlay.classes = Overlay_module_default;
-	Overlay.varsResolver = varsResolver$j;
+	Overlay.varsResolver = varsResolver$f;
 	Overlay.displayName = "@mantine/core/Overlay";
 
 	//#region packages/@mantine/core/src/components/Portal/Portal.tsx
@@ -8727,9 +7622,9 @@
 		}
 		return createPortalNode(others);
 	}
-	const defaultProps$p = { reuseTargetNode: true };
+	const defaultProps$j = { reuseTargetNode: true };
 	const Portal = factory((props) => {
-		const { children, target, reuseTargetNode, ref, ...others } = useProps("Portal", defaultProps$p, props);
+		const { children, target, reuseTargetNode, ref, ...others } = useProps("Portal", defaultProps$j, props);
 		const [mounted, setMounted] = reactExports.useState(false);
 		const nodeRef = reactExports.useRef(null);
 		useIsomorphicEffect(() => {
@@ -9228,12 +8123,12 @@
 	PopoverDropdown.displayName = "@mantine/core/PopoverDropdown";
 
 	//#region packages/@mantine/core/src/components/Popover/PopoverTarget/PopoverTarget.tsx
-	const defaultProps$o = {
+	const defaultProps$i = {
 		refProp: "ref",
 		popupType: "dialog"
 	};
 	const PopoverTarget = factory((props) => {
-		const { children, refProp, popupType, ref, ...others } = useProps("PopoverTarget", defaultProps$o, props);
+		const { children, refProp, popupType, ref, ...others } = useProps("PopoverTarget", defaultProps$i, props);
 		const child = getSingleElementChild(children);
 		if (!child) throw new Error("Popover.Target component children should be an element or a component that accepts ref. Fragments, strings, numbers and other primitive values are not supported");
 		const forwardedProps = others;
@@ -9363,7 +8258,7 @@
 	}
 
 	//#region packages/@mantine/core/src/components/Popover/Popover.tsx
-	const defaultProps$n = {
+	const defaultProps$h = {
 		position: "bottom",
 		offset: 8,
 		transitionProps: {
@@ -9392,12 +8287,12 @@
 		__staticSelector: "Popover",
 		width: "max-content"
 	};
-	const varsResolver$i = createVarsResolver((_, { radius, shadow }) => ({ dropdown: {
+	const varsResolver$e = createVarsResolver((_, { radius, shadow }) => ({ dropdown: {
 		"--popover-radius": radius === void 0 ? void 0 : getRadius(radius),
 		"--popover-shadow": getShadow(shadow)
 	} }));
 	function Popover(_props) {
-		const props = useProps("Popover", defaultProps$n, _props);
+		const props = useProps("Popover", defaultProps$h, _props);
 		const { children, position, offset, onPositionChange, opened, transitionProps, onExitTransitionEnd, onEnterTransitionEnd, width, middlewares, withArrow, arrowSize, arrowOffset, arrowRadius, arrowPosition, unstyled, classNames, styles, closeOnClickOutside, withinPortal, portalProps, closeOnEscape, clickOutsideEvents, trapFocus, onClose, onDismiss, onOpen, onChange, zIndex, radius, shadow, id, defaultOpened, __staticSelector, withRoles, disabled, returnFocus, variant, keepMounted, vars, floatingStrategy, withOverlay, overlayProps, hideDetached, attributes, preventPositionChangeWhenVisible, ...others } = props;
 		const getStyles = useStyles({
 			name: __staticSelector,
@@ -9409,7 +8304,7 @@
 			attributes,
 			rootSelector: "dropdown",
 			vars,
-			varsResolver: varsResolver$i
+			varsResolver: varsResolver$e
 		});
 		const { resolvedStyles } = useResolvedStylesApi({
 			classNames,
@@ -9545,7 +8440,7 @@
 	}
 	Popover.Target = PopoverTarget;
 	Popover.Dropdown = PopoverDropdown;
-	Popover.varsResolver = varsResolver$i;
+	Popover.varsResolver = varsResolver$e;
 	Popover.displayName = "@mantine/core/Popover";
 	Popover.extend = (input) => input;
 	Popover.withProps = (fixedProps) => {
@@ -9611,16 +8506,16 @@
 		oval: Oval,
 		dots: Dots
 	};
-	const defaultProps$m = {
+	const defaultProps$g = {
 		loaders: defaultLoaders,
 		type: "oval"
 	};
-	const varsResolver$h = createVarsResolver((theme, { size, color }) => ({ root: {
+	const varsResolver$d = createVarsResolver((theme, { size, color }) => ({ root: {
 		"--loader-size": getSize(size, "loader-size"),
 		"--loader-color": color ? getThemeColor(color, theme) : void 0
 	} }));
 	const Loader = factory((_props) => {
-		const props = useProps("Loader", defaultProps$m, _props);
+		const props = useProps("Loader", defaultProps$g, _props);
 		const { size, color, type, vars, className, style, classNames, styles, unstyled, loaders, variant, children, attributes, ...others } = props;
 		const getStyles = useStyles({
 			name: "Loader",
@@ -9633,7 +8528,7 @@
 			unstyled,
 			attributes,
 			vars,
-			varsResolver: varsResolver$h
+			varsResolver: varsResolver$d
 		});
 		if (children) return /* @__PURE__ */ jsxRuntimeExports.jsx(Box, {
 			...getStyles("root"),
@@ -9650,7 +8545,7 @@
 	});
 	Loader.defaultLoaders = defaultLoaders;
 	Loader.classes = Loader_module_default;
-	Loader.varsResolver = varsResolver$h;
+	Loader.varsResolver = varsResolver$d;
 	Loader.displayName = "@mantine/core/Loader";
 
 	//#region packages/@mantine/core/src/components/CloseButton/CloseIcon.tsx
@@ -9682,14 +8577,14 @@
 	};
 
 	//#region packages/@mantine/core/src/components/CloseButton/CloseButton.tsx
-	const defaultProps$l = { variant: "subtle" };
-	const varsResolver$g = createVarsResolver((_, { size, radius, iconSize }) => ({ root: {
+	const defaultProps$f = { variant: "subtle" };
+	const varsResolver$c = createVarsResolver((_, { size, radius, iconSize }) => ({ root: {
 		"--cb-size": getSize(size, "cb-size"),
 		"--cb-radius": radius === void 0 ? void 0 : getRadius(radius),
 		"--cb-icon-size": rem(iconSize)
 	} }));
 	const CloseButton = polymorphicFactory((_props) => {
-		const props = useProps("CloseButton", defaultProps$l, _props);
+		const props = useProps("CloseButton", defaultProps$f, _props);
 		const { iconSize, children, vars, radius, className, classNames, style, styles, unstyled, "data-disabled": dataDisabled, disabled, variant, icon, mod, attributes, __staticSelector, ...others } = props;
 		const getStyles = useStyles({
 			name: __staticSelector || "CloseButton",
@@ -9702,7 +8597,7 @@
 			unstyled,
 			attributes,
 			vars,
-			varsResolver: varsResolver$g
+			varsResolver: varsResolver$c
 		});
 		return /* @__PURE__ */ jsxRuntimeExports.jsxs(UnstyledButton, {
 			...others,
@@ -9718,63 +8613,8 @@
 		});
 	});
 	CloseButton.classes = CloseButton_module_default;
-	CloseButton.varsResolver = varsResolver$g;
+	CloseButton.varsResolver = varsResolver$c;
 	CloseButton.displayName = "@mantine/core/CloseButton";
-
-	//#region packages/@mantine/core/src/components/Group/filter-falsy-children/filter-falsy-children.ts
-	function filterFalsyChildren(children) {
-		return reactExports.Children.toArray(children).filter(Boolean);
-	}
-
-	//#region packages/@mantine/core/src/components/Group/Group.module.css
-	var Group_module_default = { "root": "m_4081bf90" };
-
-	//#region packages/@mantine/core/src/components/Group/Group.tsx
-	const defaultProps$k = {
-		preventGrowOverflow: true,
-		gap: "md",
-		align: "center",
-		justify: "flex-start",
-		wrap: "wrap"
-	};
-	const varsResolver$f = createVarsResolver((_, { grow, preventGrowOverflow, gap, align, justify, wrap }, { childWidth }) => ({ root: {
-		"--group-child-width": grow && preventGrowOverflow ? childWidth : void 0,
-		"--group-gap": getSpacing(gap),
-		"--group-align": align,
-		"--group-justify": justify,
-		"--group-wrap": wrap
-	} }));
-	const Group = factory((_props) => {
-		const props = useProps("Group", defaultProps$k, _props);
-		const { classNames, className, style, styles, unstyled, children, gap, align, justify, wrap, grow, preventGrowOverflow, vars, variant, __size, mod, attributes, ...others } = props;
-		const filteredChildren = filterFalsyChildren(children);
-		const childrenCount = filteredChildren.length;
-		const resolvedGap = getSpacing(gap ?? "md");
-		return /* @__PURE__ */ jsxRuntimeExports.jsx(Box, {
-			...useStyles({
-				name: "Group",
-				props,
-				stylesCtx: { childWidth: `calc(${100 / childrenCount}% - (${resolvedGap} - ${resolvedGap} / ${childrenCount}))` },
-				className,
-				style,
-				classes: Group_module_default,
-				classNames,
-				styles,
-				unstyled,
-				attributes,
-				vars,
-				varsResolver: varsResolver$f
-			})("root"),
-			variant,
-			mod: [{ grow }, mod],
-			size: __size,
-			...others,
-			children: filteredChildren
-		});
-	});
-	Group.classes = Group_module_default;
-	Group.varsResolver = varsResolver$f;
-	Group.displayName = "@mantine/core/Group";
 
 	//#region packages/@mantine/core/src/components/ModalBase/ModalBase.context.ts
 	const [ModalBaseProvider, useModalBaseContext] = createSafeContext("ModalBase component was not found in tree");
@@ -10979,7 +9819,7 @@
 	};
 
 	//#region packages/@mantine/core/src/components/Input/InputDescription/InputDescription.tsx
-	const varsResolver$e = createVarsResolver((_, { size }) => ({ description: { "--input-description-size": size === void 0 ? void 0 : `calc(${getFontSize(size)} - ${rem(2)})` } }));
+	const varsResolver$b = createVarsResolver((_, { size }) => ({ description: { "--input-description-size": size === void 0 ? void 0 : `calc(${getFontSize(size)} - ${rem(2)})` } }));
 	const InputDescription = factory((_props) => {
 		const props = useProps("InputDescription", null, _props);
 		const { classNames, className, style, styles, unstyled, vars, __staticSelector, __inheritStyles = true, attributes, ...others } = useProps("InputDescription", null, props);
@@ -10996,7 +9836,7 @@
 			attributes,
 			rootSelector: "description",
 			vars,
-			varsResolver: varsResolver$e
+			varsResolver: varsResolver$b
 		});
 		return /* @__PURE__ */ jsxRuntimeExports.jsx(Box, {
 			component: "p",
@@ -11008,11 +9848,11 @@
 		});
 	});
 	InputDescription.classes = Input_module_default;
-	InputDescription.varsResolver = varsResolver$e;
+	InputDescription.varsResolver = varsResolver$b;
 	InputDescription.displayName = "@mantine/core/InputDescription";
 
 	//#region packages/@mantine/core/src/components/Input/InputError/InputError.tsx
-	const varsResolver$d = createVarsResolver((_, { size }) => ({ error: { "--input-error-size": size === void 0 ? void 0 : `calc(${getFontSize(size)} - ${rem(2)})` } }));
+	const varsResolver$a = createVarsResolver((_, { size }) => ({ error: { "--input-error-size": size === void 0 ? void 0 : `calc(${getFontSize(size)} - ${rem(2)})` } }));
 	const InputError = factory((_props) => {
 		const props = useProps("InputError", null, _props);
 		const { classNames, className, style, styles, unstyled, vars, attributes, __staticSelector, __inheritStyles = true, ...others } = props;
@@ -11028,7 +9868,7 @@
 			attributes,
 			rootSelector: "error",
 			vars,
-			varsResolver: varsResolver$d
+			varsResolver: varsResolver$a
 		});
 		const ctx = reactExports.use(InputWrapperContext);
 		return /* @__PURE__ */ jsxRuntimeExports.jsx(Box, {
@@ -11041,17 +9881,17 @@
 		});
 	});
 	InputError.classes = Input_module_default;
-	InputError.varsResolver = varsResolver$d;
+	InputError.varsResolver = varsResolver$a;
 	InputError.displayName = "@mantine/core/InputError";
 
 	//#region packages/@mantine/core/src/components/Input/InputLabel/InputLabel.tsx
-	const defaultProps$j = { labelElement: "label" };
-	const varsResolver$c = createVarsResolver((_, { size }) => ({ label: {
+	const defaultProps$e = { labelElement: "label" };
+	const varsResolver$9 = createVarsResolver((_, { size }) => ({ label: {
 		"--input-label-size": getFontSize(size),
 		"--input-asterisk-color": void 0
 	} }));
 	const InputLabel = factory((_props) => {
-		const props = useProps("InputLabel", defaultProps$j, _props);
+		const props = useProps("InputLabel", defaultProps$e, _props);
 		const { classNames, className, style, styles, unstyled, vars, labelElement, required, htmlFor, onMouseDown, children, __staticSelector, mod, attributes, ...others } = props;
 		const _getStyles = useStyles({
 			name: ["InputWrapper", __staticSelector],
@@ -11065,7 +9905,7 @@
 			attributes,
 			rootSelector: "label",
 			vars,
-			varsResolver: varsResolver$c
+			varsResolver: varsResolver$9
 		});
 		const ctx = reactExports.use(InputWrapperContext);
 		const getStyles = ctx?.getStyles || _getStyles;
@@ -11090,7 +9930,7 @@
 		});
 	});
 	InputLabel.classes = Input_module_default;
-	InputLabel.varsResolver = varsResolver$c;
+	InputLabel.varsResolver = varsResolver$9;
 	InputLabel.displayName = "@mantine/core/InputLabel";
 
 	//#region packages/@mantine/core/src/components/Input/InputPlaceholder/InputPlaceholder.tsx
@@ -11131,7 +9971,7 @@
 	}
 
 	//#region packages/@mantine/core/src/components/Input/InputWrapper/InputWrapper.tsx
-	const defaultProps$i = {
+	const defaultProps$d = {
 		labelElement: "label",
 		inputContainer: (children) => children,
 		inputWrapperOrder: [
@@ -11141,7 +9981,7 @@
 			"error"
 		]
 	};
-	const varsResolver$b = createVarsResolver((_, { size }) => ({
+	const varsResolver$8 = createVarsResolver((_, { size }) => ({
 		label: {
 			"--input-label-size": getFontSize(size),
 			"--input-asterisk-color": void 0
@@ -11150,7 +9990,7 @@
 		description: { "--input-description-size": size === void 0 ? void 0 : `calc(${getFontSize(size)} - ${rem(2)})` }
 	}));
 	const InputWrapper = factory((_props) => {
-		const props = useProps("InputWrapper", defaultProps$i, _props);
+		const props = useProps("InputWrapper", defaultProps$d, _props);
 		const { classNames, className, style, styles, unstyled, vars, size, variant, __staticSelector, inputContainer, inputWrapperOrder, label, error, description, labelProps, descriptionProps, errorProps, labelElement, children, withAsterisk, id, required, __stylesApiProps, mod, attributes, ...others } = props;
 		const getStyles = useStyles({
 			name: ["InputWrapper", __staticSelector],
@@ -11163,7 +10003,7 @@
 			unstyled,
 			attributes,
 			vars,
-			varsResolver: varsResolver$b
+			varsResolver: varsResolver$8
 		});
 		const sharedProps = {
 			size,
@@ -11236,11 +10076,11 @@
 		});
 	});
 	InputWrapper.classes = Input_module_default;
-	InputWrapper.varsResolver = varsResolver$b;
+	InputWrapper.varsResolver = varsResolver$8;
 	InputWrapper.displayName = "@mantine/core/InputWrapper";
 
 	//#region packages/@mantine/core/src/components/Input/Input.tsx
-	const defaultProps$h = {
+	const defaultProps$c = {
 		variant: "default",
 		leftSectionPointerEvents: "none",
 		rightSectionPointerEvents: "none",
@@ -11250,7 +10090,7 @@
 		loading: false,
 		loadingPosition: "right"
 	};
-	const varsResolver$a = createVarsResolver((_, props, ctx) => ({ wrapper: {
+	const varsResolver$7 = createVarsResolver((_, props, ctx) => ({ wrapper: {
 		"--input-margin-top": ctx.offsetTop ? "calc(var(--mantine-spacing-xs) / 2)" : void 0,
 		"--input-margin-bottom": ctx.offsetBottom ? "calc(var(--mantine-spacing-xs) / 2)" : void 0,
 		"--input-height": getSize(props.size, "input-height"),
@@ -11263,7 +10103,7 @@
 		"--input-right-section-pointer-events": props.rightSectionPointerEvents
 	} }));
 	const Input = polymorphicFactory((_props) => {
-		const props = useProps("Input", defaultProps$h, _props);
+		const props = useProps("Input", defaultProps$c, _props);
 		const { classNames, className, style, styles, unstyled, required, __staticSelector, __stylesApiProps, size, wrapperProps, error, disabled, leftSection, leftSectionProps, leftSectionWidth, rightSection, rightSectionProps, rightSectionWidth, rightSectionPointerEvents, leftSectionPointerEvents, variant, vars, pointer, multiline, radius, id, withAria, withErrorStyles, mod, inputSize, attributes, __clearSection, __clearable, __clearSectionMode, __defaultRightSection, loading, loadingPosition, rootRef, ...others } = props;
 		const { styleProps, rest } = extractStyleProps(others);
 		const ctx = reactExports.use(InputWrapperContext);
@@ -11284,7 +10124,7 @@
 			stylesCtx,
 			rootSelector: "wrapper",
 			vars,
-			varsResolver: varsResolver$a
+			varsResolver: varsResolver$7
 		});
 		const ariaAttributes = withAria ? {
 			required,
@@ -11357,7 +10197,7 @@
 		});
 	});
 	Input.classes = Input_module_default;
-	Input.varsResolver = varsResolver$a;
+	Input.varsResolver = varsResolver$7;
 	Input.Wrapper = InputWrapper;
 	Input.Label = InputLabel;
 	Input.Error = InputError;
@@ -11422,13 +10262,13 @@
 	}
 
 	//#region packages/@mantine/core/src/components/InputBase/InputBase.tsx
-	const defaultProps$g = {
+	const defaultProps$b = {
 		__staticSelector: "InputBase",
 		withAria: true,
 		size: "sm"
 	};
 	const InputBase = polymorphicFactory((props) => {
-		const { inputProps, wrapperProps, ...others } = useInputProps("InputBase", defaultProps$g, props);
+		const { inputProps, wrapperProps, ...others } = useInputProps("InputBase", defaultProps$b, props);
 		return /* @__PURE__ */ jsxRuntimeExports.jsx(Input.Wrapper, {
 			...wrapperProps,
 			children: /* @__PURE__ */ jsxRuntimeExports.jsx(Input, {
@@ -11465,54 +10305,6 @@
 		});
 	}
 	AccordionChevron.displayName = "@mantine/core/AccordionChevron";
-
-	//#region packages/@mantine/core/src/components/Text/Text.module.css
-	var Text_module_default = { "root": "m_b6d8b162" };
-
-	//#region packages/@mantine/core/src/components/Text/Text.tsx
-	function getTextTruncate(truncate) {
-		if (truncate === "start") return "start";
-		if (truncate === "end" || truncate) return "end";
-	}
-	const defaultProps$f = { inherit: false };
-	const varsResolver$9 = createVarsResolver((theme, { variant, lineClamp, gradient, size }) => ({ root: {
-		"--text-fz": getFontSize(size),
-		"--text-lh": getLineHeight(size),
-		"--text-gradient": variant === "gradient" ? getGradient(gradient, theme) : void 0,
-		"--text-line-clamp": typeof lineClamp === "number" ? lineClamp.toString() : void 0
-	} }));
-	const Text = polymorphicFactory((_props) => {
-		const props = useProps("Text", defaultProps$f, _props);
-		const { lineClamp, truncate, inline, inherit, gradient, span, __staticSelector, vars, className, style, classNames, styles, unstyled, variant, mod, size, attributes, ...others } = props;
-		return /* @__PURE__ */ jsxRuntimeExports.jsx(Box, {
-			...useStyles({
-				name: ["Text", __staticSelector],
-				props,
-				classes: Text_module_default,
-				className,
-				style,
-				classNames,
-				styles,
-				unstyled,
-				attributes,
-				vars,
-				varsResolver: varsResolver$9
-			})("root", { focusable: true }),
-			component: span ? "span" : "p",
-			variant,
-			mod: [{
-				"data-truncate": getTextTruncate(truncate),
-				"data-line-clamp": typeof lineClamp === "number",
-				"data-inline": inline,
-				"data-inherit": inherit
-			}, mod],
-			size,
-			...others
-		});
-	});
-	Text.classes = Text_module_default;
-	Text.varsResolver = varsResolver$9;
-	Text.displayName = "@mantine/core/Text";
 
 	//#region packages/@mantine/core/src/components/Combobox/get-parsed-combobox-data/get-parsed-combobox-data.ts
 	function parseItem(item) {
@@ -11558,13 +10350,13 @@
 	};
 
 	//#region packages/@mantine/core/src/components/Combobox/ComboboxChevron/ComboboxChevron.tsx
-	const defaultProps$e = { error: null };
-	const varsResolver$8 = createVarsResolver((theme, { size, color }) => ({ chevron: {
+	const defaultProps$a = { error: null };
+	const varsResolver$6 = createVarsResolver((theme, { size, color }) => ({ chevron: {
 		"--combobox-chevron-size": getSize(size, "combobox-chevron-size"),
 		"--combobox-chevron-color": color ? getThemeColor(color, theme) : void 0
 	} }));
 	const ComboboxChevron = factory((_props) => {
-		const props = useProps("ComboboxChevron", defaultProps$e, _props);
+		const props = useProps("ComboboxChevron", defaultProps$a, _props);
 		const { size, error, style, className, classNames, styles, unstyled, vars, attributes, mod, ...others } = props;
 		const getStyles = useStyles({
 			name: "ComboboxChevron",
@@ -11576,7 +10368,7 @@
 			styles,
 			unstyled,
 			vars,
-			varsResolver: varsResolver$8,
+			varsResolver: varsResolver$6,
 			attributes,
 			rootSelector: "chevron"
 		});
@@ -11602,279 +10394,8 @@
 		});
 	});
 	ComboboxChevron.classes = Combobox_module_default;
-	ComboboxChevron.varsResolver = varsResolver$8;
+	ComboboxChevron.varsResolver = varsResolver$6;
 	ComboboxChevron.displayName = "@mantine/core/ComboboxChevron";
-
-	//#region packages/@mantine/core/src/components/Badge/Badge.module.css
-	var Badge_module_default = {
-		"root": "m_347db0ec",
-		"root--dot": "m_fbd81e3d",
-		"label": "m_5add502a",
-		"section": "m_91fdda9b"
-	};
-
-	//#region packages/@mantine/core/src/components/Badge/Badge.tsx
-	const varsResolver$7 = createVarsResolver((theme, { radius, color, gradient, variant, size, autoContrast, circle }) => {
-		const colors = theme.variantColorResolver({
-			color: color || theme.primaryColor,
-			theme,
-			gradient,
-			variant: variant || "filled",
-			autoContrast
-		});
-		return { root: {
-			"--badge-height": getSize(size, "badge-height"),
-			"--badge-padding-x": getSize(size, "badge-padding-x"),
-			"--badge-fz": getSize(size, "badge-fz"),
-			"--badge-radius": circle || radius === void 0 ? void 0 : getRadius(radius),
-			"--badge-bg": color || variant ? colors.background : void 0,
-			"--badge-color": color || variant ? colors.color : void 0,
-			"--badge-bd": color || variant ? colors.border : void 0,
-			"--badge-dot-color": variant === "dot" ? getThemeColor(color, theme) : void 0
-		} };
-	});
-	const Badge = polymorphicFactory((_props) => {
-		const props = useProps("Badge", null, _props);
-		const { classNames, className, style, styles, unstyled, vars, radius, color, gradient, leftSection, rightSection, children, variant, fullWidth, autoContrast, circle, mod, attributes, ...others } = props;
-		const getStyles = useStyles({
-			name: "Badge",
-			props,
-			classes: Badge_module_default,
-			className,
-			style,
-			classNames,
-			styles,
-			unstyled,
-			attributes,
-			vars,
-			varsResolver: varsResolver$7
-		});
-		return /* @__PURE__ */ jsxRuntimeExports.jsxs(Box, {
-			variant,
-			mod: [{
-				block: fullWidth,
-				circle,
-				"with-right-section": !!rightSection,
-				"with-left-section": !!leftSection
-			}, mod],
-			...getStyles("root", { variant }),
-			...others,
-			children: [
-				leftSection && /* @__PURE__ */ jsxRuntimeExports.jsx("span", {
-					...getStyles("section"),
-					"data-position": "left",
-					children: leftSection
-				}),
-				/* @__PURE__ */ jsxRuntimeExports.jsx("span", {
-					...getStyles("label"),
-					children
-				}),
-				rightSection && /* @__PURE__ */ jsxRuntimeExports.jsx("span", {
-					...getStyles("section"),
-					"data-position": "right",
-					children: rightSection
-				})
-			]
-		});
-	});
-	Badge.classes = Badge_module_default;
-	Badge.varsResolver = varsResolver$7;
-	Badge.displayName = "@mantine/core/Badge";
-
-	//#region packages/@mantine/core/src/components/HoverCard/HoverCard.context.ts
-	const [HoverCardContext, useHoverCardContext] = createSafeContext("HoverCard component was not found in the tree");
-
-	//#region packages/@mantine/core/src/components/HoverCard/HoverCardGroup/HoverCardGroup.tsx
-	const HoverCardGroupContext = reactExports.createContext({ withinGroup: false });
-	const defaultProps$d = {
-		openDelay: 0,
-		closeDelay: 0
-	};
-	function HoverCardGroup(props) {
-		const { openDelay, closeDelay, children } = useProps("HoverCardGroup", defaultProps$d, props);
-		return /* @__PURE__ */ jsxRuntimeExports.jsx(HoverCardGroupContext, {
-			value: { withinGroup: true },
-			children: /* @__PURE__ */ jsxRuntimeExports.jsx(FloatingDelayGroup, {
-				delay: {
-					open: openDelay,
-					close: closeDelay
-				},
-				children
-			})
-		});
-	}
-	HoverCardGroup.displayName = "@mantine/core/HoverCardGroup";
-	HoverCardGroup.extend = (c) => c;
-
-	//#region packages/@mantine/core/src/components/HoverCard/HoverCardDropdown/HoverCardDropdown.tsx
-	function HoverCardDropdown(props) {
-		const { children, onMouseEnter, onMouseLeave, ...others } = useProps("HoverCardDropdown", null, props);
-		const ctx = useHoverCardContext();
-		if (reactExports.use(HoverCardGroupContext).withinGroup && ctx.getFloatingProps && ctx.floating) {
-			const floatingProps = ctx.getFloatingProps();
-			return /* @__PURE__ */ jsxRuntimeExports.jsx(Popover.Dropdown, {
-				ref: ctx.floating,
-				...floatingProps,
-				onMouseEnter: createEventHandler(onMouseEnter, floatingProps.onMouseEnter),
-				onMouseLeave: createEventHandler(onMouseLeave, floatingProps.onMouseLeave),
-				...others,
-				children
-			});
-		}
-		const handleMouseEnter = createEventHandler(onMouseEnter, ctx.openDropdown);
-		const handleMouseLeave = createEventHandler(onMouseLeave, ctx.closeDropdown);
-		return /* @__PURE__ */ jsxRuntimeExports.jsx(Popover.Dropdown, {
-			onMouseEnter: handleMouseEnter,
-			onMouseLeave: handleMouseLeave,
-			...others,
-			children
-		});
-	}
-	HoverCardDropdown.displayName = "@mantine/core/HoverCardDropdown";
-
-	//#region packages/@mantine/core/src/components/HoverCard/HoverCardTarget/HoverCardTarget.tsx
-	const defaultProps$c = { refProp: "ref" };
-	function HoverCardTarget(props) {
-		const { children, refProp, eventPropsWrapperName, ...others } = useProps("HoverCardTarget", defaultProps$c, props);
-		const child = getSingleElementChild(children);
-		if (!child) throw new Error("HoverCard.Target component children should be an element or a component that accepts ref. Fragments, strings, numbers and other primitive values are not supported");
-		const ctx = useHoverCardContext();
-		if (reactExports.use(HoverCardGroupContext).withinGroup && ctx.getReferenceProps && ctx.reference) {
-			const referenceProps = ctx.getReferenceProps();
-			return /* @__PURE__ */ jsxRuntimeExports.jsx(Popover.Target, {
-				refProp,
-				...others,
-				children: reactExports.cloneElement(child, eventPropsWrapperName ? { [eventPropsWrapperName]: {
-					...referenceProps,
-					ref: ctx.reference
-				} } : {
-					...referenceProps,
-					ref: ctx.reference
-				})
-			});
-		}
-		const eventListeners = {
-			onMouseEnter: createEventHandler(child.props.onMouseEnter, ctx.openDropdown),
-			onMouseLeave: createEventHandler(child.props.onMouseLeave, ctx.closeDropdown)
-		};
-		return /* @__PURE__ */ jsxRuntimeExports.jsx(Popover.Target, {
-			refProp,
-			...others,
-			children: reactExports.cloneElement(child, eventPropsWrapperName ? { [eventPropsWrapperName]: eventListeners } : eventListeners)
-		});
-	}
-	HoverCardTarget.displayName = "@mantine/core/HoverCardTarget";
-
-	//#region packages/@mantine/core/src/components/HoverCard/use-hover-card.ts
-	function useHoverCard(settings) {
-		const [uncontrolledOpened, setUncontrolledOpened] = reactExports.useState(settings.defaultOpened);
-		const opened = typeof settings.opened === "boolean" ? settings.opened : uncontrolledOpened;
-		const withinGroup = reactExports.use(HoverCardGroupContext).withinGroup;
-		const uid = useId$1();
-		const openTimeout = reactExports.useRef(-1);
-		const closeTimeout = reactExports.useRef(-1);
-		const clearTimeouts = reactExports.useCallback(() => {
-			window.clearTimeout(openTimeout.current);
-			window.clearTimeout(closeTimeout.current);
-		}, []);
-		const onChange = reactExports.useCallback((_opened) => {
-			setUncontrolledOpened(_opened);
-			if (_opened) {
-				setCurrentId(uid);
-				settings.onOpen?.();
-			} else settings.onClose?.();
-		}, [
-			uid,
-			settings.onOpen,
-			settings.onClose
-		]);
-		const { context, refs } = useFloating({
-			open: opened,
-			onOpenChange: onChange
-		});
-		const { delay: groupDelay, setCurrentId } = useDelayGroup(context, { id: uid });
-		const { getReferenceProps, getFloatingProps } = useInteractions([
-			useHover(context, {
-				enabled: true,
-				delay: withinGroup ? groupDelay : {
-					open: settings.openDelay,
-					close: settings.closeDelay
-				}
-			}),
-			useRole(context, { role: "dialog" }),
-			useDismiss(context, { enabled: withinGroup })
-		]);
-		const openDropdown = reactExports.useCallback(() => {
-			if (withinGroup) return;
-			clearTimeouts();
-			if (settings.openDelay === 0 || settings.openDelay === void 0) onChange(true);
-			else openTimeout.current = window.setTimeout(() => onChange(true), settings.openDelay);
-		}, [
-			withinGroup,
-			clearTimeouts,
-			settings.openDelay,
-			onChange
-		]);
-		const closeDropdown = reactExports.useCallback(() => {
-			if (withinGroup) return;
-			clearTimeouts();
-			if (settings.closeDelay === 0 || settings.closeDelay === void 0) onChange(false);
-			else closeTimeout.current = window.setTimeout(() => onChange(false), settings.closeDelay);
-		}, [
-			withinGroup,
-			clearTimeouts,
-			settings.closeDelay,
-			onChange
-		]);
-		reactExports.useEffect(() => () => clearTimeouts(), [clearTimeouts]);
-		return {
-			opened,
-			reference: refs.setReference,
-			floating: refs.setFloating,
-			getReferenceProps,
-			getFloatingProps,
-			openDropdown,
-			closeDropdown
-		};
-	}
-
-	//#region packages/@mantine/core/src/components/HoverCard/HoverCard.tsx
-	const defaultProps$b = {
-		openDelay: 0,
-		closeDelay: 150,
-		initiallyOpened: false
-	};
-	function HoverCard(props) {
-		const { children, onOpen, onClose, openDelay, closeDelay, initiallyOpened, ...others } = useProps("HoverCard", defaultProps$b, props);
-		const hoverCard = useHoverCard({
-			openDelay,
-			closeDelay,
-			defaultOpened: initiallyOpened,
-			onOpen,
-			onClose
-		});
-		return /* @__PURE__ */ jsxRuntimeExports.jsx(HoverCardContext, {
-			value: {
-				openDropdown: hoverCard.openDropdown,
-				closeDropdown: hoverCard.closeDropdown,
-				getReferenceProps: hoverCard.getReferenceProps,
-				getFloatingProps: hoverCard.getFloatingProps,
-				reference: hoverCard.reference,
-				floating: hoverCard.floating
-			},
-			children: /* @__PURE__ */ jsxRuntimeExports.jsx(Popover, {
-				...others,
-				opened: hoverCard.opened,
-				__staticSelector: "HoverCard",
-				children
-			})
-		});
-	}
-	HoverCard.displayName = "@mantine/core/HoverCard";
-	HoverCard.Target = HoverCardTarget;
-	HoverCard.Dropdown = HoverCardDropdown;
-	HoverCard.Group = HoverCardGroup;
-	HoverCard.extend = (input) => input;
 
 	//#region packages/@mantine/core/src/components/Modal/Modal.context.ts
 	const [ModalProvider, useModalContext] = createSafeContext("Modal component was not found in tree");
@@ -11983,7 +10504,7 @@
 	ModalOverlay.displayName = "@mantine/core/ModalOverlay";
 
 	//#region packages/@mantine/core/src/components/Modal/ModalRoot.tsx
-	const defaultProps$a = {
+	const defaultProps$9 = {
 		__staticSelector: "Modal",
 		closeOnClickOutside: true,
 		withinPortal: true,
@@ -11999,14 +10520,14 @@
 		},
 		yOffset: "5dvh"
 	};
-	const varsResolver$6 = createVarsResolver((_, { radius, size, yOffset, xOffset }) => ({ root: {
+	const varsResolver$5 = createVarsResolver((_, { radius, size, yOffset, xOffset }) => ({ root: {
 		"--modal-radius": radius === void 0 ? void 0 : getRadius(radius),
 		"--modal-size": getSize(size, "modal-size"),
 		"--modal-y-offset": rem(yOffset),
 		"--modal-x-offset": rem(xOffset)
 	} }));
 	const ModalRoot = factory((_props) => {
-		const props = useProps("ModalRoot", defaultProps$a, _props);
+		const props = useProps("ModalRoot", defaultProps$9, _props);
 		const { classNames, className, style, styles, unstyled, vars, yOffset, scrollAreaComponent, radius, fullScreen, centered, xOffset, __staticSelector, attributes, ...others } = props;
 		const getStyles = useStyles({
 			name: __staticSelector,
@@ -12019,7 +10540,7 @@
 			unstyled,
 			attributes,
 			vars,
-			varsResolver: varsResolver$6
+			varsResolver: varsResolver$5
 		});
 		return /* @__PURE__ */ jsxRuntimeExports.jsx(ModalProvider, {
 			value: {
@@ -12039,7 +10560,7 @@
 		});
 	});
 	ModalRoot.classes = Modal_module_default;
-	ModalRoot.varsResolver = varsResolver$6;
+	ModalRoot.varsResolver = varsResolver$5;
 	ModalRoot.displayName = "@mantine/core/ModalRoot";
 
 	//#region packages/@mantine/core/src/components/Modal/ModalStack.tsx
@@ -12081,7 +10602,7 @@
 	ModalTitle.displayName = "@mantine/core/ModalTitle";
 
 	//#region packages/@mantine/core/src/components/Modal/Modal.tsx
-	const defaultProps$9 = {
+	const defaultProps$8 = {
 		closeOnClickOutside: true,
 		withinPortal: true,
 		lockScroll: true,
@@ -12098,7 +10619,7 @@
 		withCloseButton: true
 	};
 	const Modal = factory((_props) => {
-		const { title, withOverlay, overlayProps, withCloseButton, closeButtonProps, children, radius, opened, stackId, zIndex, ...others } = useProps("Modal", defaultProps$9, _props);
+		const { title, withOverlay, overlayProps, withCloseButton, closeButtonProps, children, radius, opened, stackId, zIndex, ...others } = useProps("Modal", defaultProps$8, _props);
 		const ctx = reactExports.use(ModalStackContext);
 		const hasHeader = !!title || withCloseButton;
 		const stackProps = ctx && stackId ? {
@@ -12164,12 +10685,12 @@
 	NativeSelectOption.displayName = "@mantine/core/NativeSelectOption";
 
 	//#region packages/@mantine/core/src/components/NativeSelect/NativeSelect.tsx
-	const defaultProps$8 = {
+	const defaultProps$7 = {
 		size: "sm",
 		rightSectionPointerEvents: "none"
 	};
 	const NativeSelect = factory((props) => {
-		const { data, children, size, error, rightSection, unstyled, ...others } = useProps("NativeSelect", defaultProps$8, props);
+		const { data, children, size, error, rightSection, unstyled, ...others } = useProps("NativeSelect", defaultProps$7, props);
 		const options = getParsedComboboxData(data).map((item, index) => /* @__PURE__ */ jsxRuntimeExports.jsx(NativeSelectOption, { data: item }, index));
 		return /* @__PURE__ */ jsxRuntimeExports.jsx(InputBase, {
 			component: "select",
@@ -12189,45 +10710,6 @@
 	});
 	NativeSelect.classes = InputBase.classes;
 	NativeSelect.displayName = "@mantine/core/NativeSelect";
-
-	//#region packages/@mantine/core/src/components/Stack/Stack.module.css
-	var Stack_module_default = { "root": "m_6d731127" };
-
-	//#region packages/@mantine/core/src/components/Stack/Stack.tsx
-	const defaultProps$7 = {
-		gap: "md",
-		align: "stretch",
-		justify: "flex-start"
-	};
-	const varsResolver$5 = createVarsResolver((_, { gap, align, justify }) => ({ root: {
-		"--stack-gap": getSpacing(gap),
-		"--stack-align": align,
-		"--stack-justify": justify
-	} }));
-	const Stack = factory((_props) => {
-		const props = useProps("Stack", defaultProps$7, _props);
-		const { classNames, className, style, styles, unstyled, vars, align, justify, gap, variant, attributes, ...others } = props;
-		return /* @__PURE__ */ jsxRuntimeExports.jsx(Box, {
-			...useStyles({
-				name: "Stack",
-				props,
-				classes: Stack_module_default,
-				className,
-				style,
-				classNames,
-				styles,
-				unstyled,
-				attributes,
-				vars,
-				varsResolver: varsResolver$5
-			})("root"),
-			variant,
-			...others
-		});
-	});
-	Stack.classes = Stack_module_default;
-	Stack.varsResolver = varsResolver$5;
-	Stack.displayName = "@mantine/core/Stack";
 
 	//#region packages/@mantine/schedule/src/labels.ts
 	const DEFAULT_SCHEDULE_LABELS = {
@@ -17690,20 +16172,12 @@
 	    events: [],
 	}));
 
-	function EventDetails({ event }) {
-	    return (jsxRuntimeExports.jsxs(Stack, { gap: 'xs', children: [jsxRuntimeExports.jsx(Text, { fw: 600, size: 'sm', children: event.title }), event.payload?.description && (jsxRuntimeExports.jsx(Text, { size: 'xs', c: 'dimmed', children: event.payload.description })), event.payload?.location && (jsxRuntimeExports.jsx(Group, { gap: 4, children: jsxRuntimeExports.jsx(Badge, { size: 'sm', variant: 'light', children: event.payload.location }) })), event.payload?.attendees && (jsxRuntimeExports.jsxs("div", { children: [jsxRuntimeExports.jsx(Text, { size: 'xs', fw: 500, mb: 4, children: "Attendees:" }), jsxRuntimeExports.jsx(Text, { size: 'xs', c: 'dimmed', children: event.payload.attendees.join(', ') })] }))] }));
-	}
-
 	const Calendar = () => {
 	    const events = useStore(eventStore, (state) => {
 	        const events = state.events;
-	        console.log('es', events);
 	        return events;
 	    });
 	    const [date, setDate] = reactExports.useState(dayjs().format('YYYY-MM-DD'));
-	    reactExports.useEffect(() => {
-	        console.log('storeEvents', events);
-	    }, [events]);
 	    return (jsxRuntimeExports.jsxs(jsxRuntimeExports.Fragment, { children: [jsxRuntimeExports.jsxs(ScheduleHeader, { styles: { header: { justifyContent: 'center' } }, children: [jsxRuntimeExports.jsx(ScheduleHeader.Previous, { onClick: () => setDate(dayjs(date)
 	                            .subtract(1, 'month')
 	                            .startOf('month')
@@ -17716,7 +16190,59 @@
 	                            .format('YYYY-MM-DD')) }), jsxRuntimeExports.jsx(ScheduleHeader.Next, { onClick: () => setDate(dayjs(date)
 	                            .add(1, 'month')
 	                            .startOf('month')
-	                            .format('YYYY-MM-DD')) }), jsxRuntimeExports.jsx(ScheduleHeader.Today, { onClick: () => setDate(dayjs().format('YYYY-MM-DD')) })] }), jsxRuntimeExports.jsx(MonthView, { date: date, events: events, withHeader: false, firstDayOfWeek: 0, onEventClick: (event, e) => console.log('event', event), renderEvent: (event, props) => (jsxRuntimeExports.jsxs(HoverCard, { width: 280, position: 'right', closeDelay: 0, transitionProps: { duration: 0 }, children: [jsxRuntimeExports.jsx(HoverCard.Target, { children: jsxRuntimeExports.jsx(UnstyledButton, { ...props }) }), jsxRuntimeExports.jsx(HoverCard.Dropdown, { children: jsxRuntimeExports.jsx(EventDetails, { event: event }) })] })) })] }));
+	                            .format('YYYY-MM-DD')) }), jsxRuntimeExports.jsx(ScheduleHeader.Today, { onClick: () => setDate(dayjs().format('YYYY-MM-DD')) })] }), jsxRuntimeExports.jsx(MonthView, { date: date, events: events, withHeader: false, firstDayOfWeek: 0, moreEventsProps: {
+	                    renderEventBody: (event) => {
+	                        if (event.allDay) {
+	                            return (jsxRuntimeExports.jsxs(UnstyledButton, { children: [' ', jsxRuntimeExports.jsx("span", { style: {
+	                                            overflow: 'hidden',
+	                                            textOverflow: 'ellipsis',
+	                                        }, children: event.title })] }));
+	                        }
+	                        return (jsxRuntimeExports.jsxs(UnstyledButton, { style: {
+	                                display: 'flex',
+	                                alignItems: 'center',
+	                                gap: 4,
+	                                fontSize: 10,
+	                                whiteSpace: 'nowrap',
+	                                overflow: 'hidden',
+	                                pointerEvents: 'all',
+	                                cursor: 'none',
+	                                paddingInline: 2,
+	                            }, children: [jsxRuntimeExports.jsx(Box, { component: 'span', style: {
+	                                        width: 8,
+	                                        height: 8,
+	                                        borderRadius: '50%',
+	                                        backgroundColor: `var(--event-bg)`,
+	                                        flexShrink: 0,
+	                                    } }), jsxRuntimeExports.jsx("span", { style: { width: 28, flexShrink: 0 }, children: dayjs(event.start).format('h:mm') }), jsxRuntimeExports.jsx("span", { style: {
+	                                        overflow: 'hidden',
+	                                        textOverflow: 'ellipsis',
+	                                    }, children: event.title })] }));
+	                    },
+	                }, renderEvent: (event, props) => {
+	                    if (event.allDay) {
+	                        return jsxRuntimeExports.jsx(UnstyledButton, { ...props });
+	                    }
+	                    const { children, className, style, ...others } = props;
+	                    return (jsxRuntimeExports.jsxs(UnstyledButton, { ...others, style: {
+	                            ...style,
+	                            display: 'flex',
+	                            alignItems: 'center',
+	                            gap: 4,
+	                            fontSize: 10,
+	                            whiteSpace: 'nowrap',
+	                            overflow: 'hidden',
+	                            pointerEvents: 'all',
+	                            cursor: 'none',
+	                            paddingInline: 2,
+	                        }, children: [jsxRuntimeExports.jsx(Box, { component: 'span', style: {
+	                                    width: 8,
+	                                    height: 8,
+	                                    borderRadius: '50%',
+	                                    backgroundColor: `var(--event-bg)`,
+	                                    flexShrink: 0,
+	                                } }), jsxRuntimeExports.jsx("span", { style: { width: 28, flexShrink: 0 }, children: dayjs(event.start).format('h:mm') }), jsxRuntimeExports.jsx("span", { style: { overflow: 'hidden', textOverflow: 'ellipsis' }, children: event.title })] }));
+	                } })] }));
 	};
 
 	const theme = createTheme({
@@ -17767,17 +16293,14 @@
 	        _this.sendSocketNotification('TRANSFORM_CALENDAR2_EVENTS', payload);
 	    },
 	    notificationReceived(notification, payload, sender) {
-	        console.log('NR', notification);
 	        if (notification === 'CALENDAR_EVENTS') {
 	            this.transformData(this, payload);
 	        }
 	        else if (notification === 'TRANSFORMED_CALENDAR2_EVENTS') {
-	            console.log('Updating events', this.updateEvents);
 	            eventStore.setState({ events: payload });
 	        }
 	    },
 	    socketNotificationReceived(notification, payload) {
-	        console.log('NR2', this.updateEventData);
 	        eventStore.setState({ events: payload });
 	    },
 	});

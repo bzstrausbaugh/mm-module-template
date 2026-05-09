@@ -75,21 +75,104 @@ const Calendar = () => {
         events={events}
         withHeader={false}
         firstDayOfWeek={0}
-        renderEvent={(event, props) => (
-          <HoverCard
-            width={280}
-            position='right'
-            closeDelay={0}
-            transitionProps={{ duration: 0 }}
-          >
-            <HoverCard.Target>
-              <UnstyledButton {...props} />
-            </HoverCard.Target>
-            <HoverCard.Dropdown>
-              <EventDetails event={event} />
-            </HoverCard.Dropdown>
-          </HoverCard>
-        )}
+        moreEventsProps={{
+          renderEventBody: (event: any) => {
+            if (event.allDay) {
+              return (
+                <UnstyledButton>
+                  {' '}
+                  <span
+                    style={{
+                      overflow: 'hidden',
+                      textOverflow: 'ellipsis',
+                    }}
+                  >
+                    {event.title}
+                  </span>
+                </UnstyledButton>
+              );
+            }
+
+            return (
+              <UnstyledButton
+                style={{
+                  display: 'flex',
+                  alignItems: 'center',
+                  gap: 4,
+                  fontSize: 10,
+                  whiteSpace: 'nowrap',
+                  overflow: 'hidden',
+                  pointerEvents: 'all',
+                  cursor: 'none',
+                  paddingInline: 2,
+                }}
+              >
+                <Box
+                  component='span'
+                  style={{
+                    width: 8,
+                    height: 8,
+                    borderRadius: '50%',
+                    backgroundColor: `var(--event-bg)`,
+                    flexShrink: 0,
+                  }}
+                />
+                <span style={{ width: 28, flexShrink: 0 }}>
+                  {dayjs(event.start).format('h:mm')}
+                </span>
+                <span
+                  style={{
+                    overflow: 'hidden',
+                    textOverflow: 'ellipsis',
+                  }}
+                >
+                  {event.title}
+                </span>
+              </UnstyledButton>
+            );
+          },
+        }}
+        renderEvent={(event: any, props) => {
+          if (event.allDay) {
+            return <UnstyledButton {...props} />;
+          }
+
+          const { children, className, style, ...others } = props;
+          return (
+            <UnstyledButton
+              {...others}
+              style={{
+                ...style,
+                display: 'flex',
+                alignItems: 'center',
+                gap: 4,
+                fontSize: 10,
+                whiteSpace: 'nowrap',
+                overflow: 'hidden',
+                pointerEvents: 'all',
+                cursor: 'none',
+                paddingInline: 2,
+              }}
+            >
+              <Box
+                component='span'
+                style={{
+                  width: 8,
+                  height: 8,
+                  borderRadius: '50%',
+                  backgroundColor: `var(--event-bg)`,
+                  flexShrink: 0,
+                }}
+              />
+              <span style={{ width: 28, flexShrink: 0 }}>
+                {dayjs(event.start).format('h:mm')}
+              </span>
+              <span style={{ overflow: 'hidden', textOverflow: 'ellipsis' }}>
+                {event.title}
+              </span>
+            </UnstyledButton>
+          );
+        }}
       />
     </>
   );

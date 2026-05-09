@@ -1,3 +1,4 @@
+import { ScheduleEventData } from '@mantine/schedule';
 import dayjs from 'dayjs';
 import * as NodeHelper from 'node_helper';
 import { trim } from 'radash';
@@ -43,7 +44,7 @@ module.exports = NodeHelper.create({
         return;
       }
       const transformed = payload.map((event, index) => {
-        const mappedEvent = {
+        const mappedEvent: any = {
           id: `evt-${index}`,
           title: trim(event.title),
           start: dayjs(parseInt(event.startDate)).toDate(),
